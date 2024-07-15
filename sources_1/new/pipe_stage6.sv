@@ -22,8 +22,7 @@
 `include "registers.svh"
 
 module pipe_stage6#(
-    localparam fpnew_pkg::fp_format_e   FpFormat    = fpnew_pkg::fp_format_e'(3),
-    localparam int unsigned WIDTH = fpnew_pkg::fp_width(FpFormat),
+    localparam int unsigned WIDTH = 16,
     localparam parallel_size=3,
     localparam para=16,
     localparam tile_size=128
@@ -87,42 +86,47 @@ always_comb begin
     else add3_i=operand1_i;
 end
 
+always_comb begin
+  if(stage==0||stage==1) mode=1;
+  else mode=0;
+end
+
 
 for(genvar i=0;i<parallel_size;i++) begin
 fp16_add add1(
 .operands_i({operand1_i[i],operand4_i[i]}), // 2 operands
 .is_boxed_i(2'b11), // 2 operands
-.rnd_mode_i,
+.rnd_mode_i(),
   // Output signals
 .result_o(alpha_t),
-.status_o
+.status_o()
 );
 
 fp16_add add2(
 .operands_i({add1_o[i],{~mul1_o[i][15],mul1_o[i][14:0]}}), // 2 operands
 .is_boxed_i(2'b11), // 2 operands
-.rnd_mode_i,
+.rnd_mode_i(),
   // Output signals
 .result_o(add2_o[i]),
-.status_o
+.status_o()
 );
 
 fp16_add add3(      //use for reduction
 .operands_i({acc_o[i][tile_size],operand3_i[i]}), // 2 operands
 .is_boxed_i(2'b11), // 2 operands
-.rnd_mode_i,
+.rnd_mode_i(),
   // Output signals
 .result_o(add3_o[i]),
-.status_o
+.status_o()
 );
 
 fp16_mul mul1(
 .operands_i({operand2_i[i],operand3_i[i]}), // 2 operands
 .is_boxed_i(2'b11), // 2 operands
-.rnd_mode_i,
+.rnd_mode_i(),
   // Output signals
 .result_o(mul1_o[i]),
-.status_o
+.status_o()
 );
 
 assign reduction_i={operandv_i[i],add3_o[i]};
@@ -130,7 +134,7 @@ assign reduction_i={operandv_i[i],add3_o[i]};
 end
 
 
-reduction 
+reduction reduct
 (
     .CLK_i(clk_i),
     .RST_i(step==stage_boundary[1]|step==stage_boundary[4]|step==stage_boundary[5]|step==stage_boundary[6]),

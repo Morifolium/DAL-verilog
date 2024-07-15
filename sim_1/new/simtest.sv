@@ -70,6 +70,8 @@ logic [100:0][15:0]op;
   .interval_cnt_o(mode)
 );
 */
+
+/*
 pipe_stage5 pip5
 (
 .CLK_i(op[0]),
@@ -104,10 +106,30 @@ pipe_stage5 pip5
 
     );
 
+*/
+
+pipe_stage6 ppe6
+(
+.clk_i(op[0][0]),
+.rst_i(op[1][0]),
+.finished(op[2][0]),
+.operandv_i(op[3]),
+.operand1_i(op[4]),
+.operand2_i(op[5]),
+.operand3_i(op[6]),
+.operand4_i(op[7]),
+.stage_boundary(op[8]),
+.set_i(op[9]),
+.mode(op[10][0]),
+.acc_o(op[11])
+);
+
+
+
 
     initial begin
-        clk=0;
-        rst=0;
+        op[0]=0;
+        op[1]=0;
         #10
         $finish;
     end
