@@ -38,7 +38,7 @@ logic operand1;
 logic operand2;
 logic mode;    //reconfigtile mode
 
-
+    /*
     pipe_stage2 p2
     (
     .CLK_i(clk),
@@ -55,6 +55,18 @@ logic mode;    //reconfigtile mode
     .operand2_o(operand2),
     .mode(mode)    //reconfigtile mode
     );
+    */
+    pipe_stage_3 stage_3
+    (
+  .interval_lb(clk),
+  .interval_ub(rst),
+  .mode(stall),
+  .interval_cnt_i(boundary),
+  .max_score(operand_i),
+  .s_i(scale_i),
+  .out_of_mode_interval(norm_n),
+  .interval_cnt_o(mode)
+);
 
     initial begin
         clk=0;
