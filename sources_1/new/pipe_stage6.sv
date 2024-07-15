@@ -55,20 +55,20 @@ logic [4:0] stage;
 
 always_ff@(posedge clk_i or rst_i) begin
     if(rst_i) step=0;
-    else step<=step+1;
+    else begin 
+    step<=step+1;
+    if(step<stage_boundary[0]) stage<=0;
+    else if(step<stage_boundary[1]) stage<=1;
+    else if(step<stage_boundary[2]) stage<=2;
+    else if(step<stage_boundary[3]) stage<=3;
+    else if(step<stage_boundary[4]) stage<=4;
+    else if(step<stage_boundary[5]) stage<=5;
+    else if(step<stage_boundary[6]) stage<=6;
+    else if(step<stage_boundary[7]) stage<=7;
+    else stage<=8;
+    end
 end
 
-always_comb begin
-    if(step<stage_boundary[0]) stage=0;
-    else if(step<stage_boundary[1]) stage=1;
-    else if(step<stage_boundary[2]) stage=2;
-    else if(step<stage_boundary[3]) stage=3;
-    else if(step<stage_boundary[4]) stage=4;
-    else if(step<stage_boundary[5]) stage=5;
-    else if(step<stage_boundary[6]) stage=6;
-    else if(step<stage_boundary[7]) stage=7;
-    else stage=8;
-end
 
 assign finished=(stage==8);
 

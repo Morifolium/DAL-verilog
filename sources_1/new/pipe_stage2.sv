@@ -61,7 +61,8 @@ module pipe_stage2 #(
     logic [WIDTH-1:0] max_cos;
     logic [WIDTH-1:0] max_id;
 
-    logic [WIDTH-1:0] float98=16'b0011101111010111;
+    logic [WIDTH-1:0] float98;
+    assign float98=16'b0011101111010111;
 
     logic [WIDTH-1:0] center_ids;
     logic [WIDTH-1:0] dnorm;
@@ -73,23 +74,23 @@ module pipe_stage2 #(
 
     logic [para-1:0]step;
     always_ff@(posedge CLK_i or RST_i)begin
-        if(RST_i) begin step=0; stage=0; end
-        else if(stall_i) step=step;
-        else step=step+1;
+        if(RST_i) begin step<=0; stage<=0; end
+        else if(stall_i) step<=step;
+        else begin 
+        step<=step+1;
+        if(step>stage_boundary[6])stage<=7;
+        else if(step>stage_boundary[5]) stage<=6;
+        else if(step>stage_boundary[4]) stage<=5;
+        else if(step>stage_boundary[3]) stage<=4;
+        else if(step>stage_boundary[2]) stage<=3;
+        else if(step>stage_boundary[1]) stage<=2;
+        else if(step>stage_boundary[0]) stage<=1;
+        else stage<=0;
+        end
     end
 
     assign finished=(stage==7);
 
-    always_comb begin
-        if(step>stage_boundary[6])stage=7;
-        else if(step>stage_boundary[5]) stage=6;
-        else if(step>stage_boundary[4]) stage=5;
-        else if(step>stage_boundary[3]) stage=4;
-        else if(step>stage_boundary[2]) stage=3;
-        else if(step>stage_boundary[1]) stage=2;
-        else if(step>stage_boundary[0]) stage=1;
-        else stage=0;
-    end 
 
     //mode
     always_comb begin  
@@ -115,21 +116,18 @@ module pipe_stage2 #(
         else if(stage==6) begin
             operand1_o=center_ids;
             operand2_o=dnorm;
-        end
+        end 
+        else if(stage==4) operand1_o=sqrt_o;
         else operand1_o=div_mul_o;
     end
 
 
 
 
-    always_comb begin
-        if(stage==4) operand1_o=sqrt_o;
-        else sqrt_o=mul_o;
-    end
 
     fp16_Rom_div div(
-    operands(div_i),
-    result(div_o)
+    .operands(div_i),
+    .result(div_o)
     );
 
   
@@ -137,20 +135,20 @@ module pipe_stage2 #(
     // Input signals
     .operands_i({scale_i,norm_n}), // 2 operands
     .is_boxed_i(2'b11), // 2 operands
-    .rnd_mode_i,
+    //.rnd_mode_i,
     // Output signals
-    .result_o(mul_o),
-    .status_o
+    .result_o(mul_o)
+    //.status_o
     );
 
     fp16_mul div_mul(
     // Input signals
     .operands_i({operand_i,div_o}), // 2 operands
     .is_boxed_i(2'b11), // 2 operands
-    .rnd_mode_i,
+    //.rnd_mode_i,
     // Output signals
-    .result_o(div_mul_o),
-    .status_o
+    .result_o(div_mul_o)
+    //.status_o
     );
 
     fp16_Rom_sqrt fp16_sqrt(

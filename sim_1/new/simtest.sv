@@ -24,39 +24,41 @@ module simtest(
 
     );
 
-logic A;
-logic B;
-logic C;
+logic clk;
+logic rst;
+logic stall;
+logic boundary;
+logic operand_i; 
+logic scale_i; // scale or norm_pos
+logic norm_n;
+logic pos;
+logic finished;
+logic stage;
+logic operand1;
+logic operand2;
+logic mode;    //reconfigtile mode
 
 
-pipe_stage2 p2
+    pipe_stage2 p2
     (
-    .CLK_i(A),
-    .RST_i(B),
-    .stall_i,
-
-    .stage_boundary,
-
-    .operand_i, 
-    .scale_i, // scale or norm_pos
-    .norm_n,
-    .pos,
-
-
-    .finished,
-    .stage,
-    
-    .operand1_o,
-    .operand2_o,
-
-
-    .mode    //reconfigtile mode
-
+    .CLK_i(clk),
+    .RST_i(rst),
+    .stall_i(stall),
+    .stage_boundary(boundary),
+    .operand_i(operand_i), 
+    .scale_i(scale_i), // scale or norm_pos
+    .norm_n(norm_n),
+    .pos(pos),
+    .finished(finished),
+    .stage(stage),
+    .operand1_o(operand1),
+    .operand2_o(operand2),
+    .mode(mode)    //reconfigtile mode
     );
 
     initial begin
-        A=0;
-        B=0;
+        clk=0;
+        rst=0;
         #10
         $finish;
     end
