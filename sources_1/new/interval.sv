@@ -40,11 +40,11 @@ assign result[0]=1;
 for(genvar i=0;i<num-1;i++)begin
     fpnew_noncomp  cmp(
     // Input signals
-    operands_i({s_i,boundary[i]}), // 2 operands
-    is_boxed_i(2'b11), // 2 operands
-    op_i(fpnew_pkg::RTZ),
+    .operands_i({s_i,boundary[i]}), // 2 operands
+    .is_boxed_i(2'b11), // 2 operands
+    .op_i(fpnew_pkg::RTZ),
     // Output signals
-    extension_bit_o(result[i+1]),
+    .extension_bit_o(result[i+1])
 );
 
 for(genvar i=0;i<num;i++)

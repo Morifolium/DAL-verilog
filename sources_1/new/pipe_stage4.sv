@@ -25,7 +25,7 @@
 module pipe_stage5
 #(
     localparam fpnew_pkg::fp_format_e   FpFormat    = fpnew_pkg::fp_format_e'(3),
-    localparam int unsigned WIDTH = fpnew_pkg::fp_width(FpFormat),
+    localparam int unsigned WIDTH = 16,
     localparam interval_size=8,
     localparam para=16
 )
@@ -66,10 +66,10 @@ module pipe_stage5
 
     logic [interval_size-1:0]acc_interval;
 
-interval
+interval check_int
 (
-    s_i(acc_s),
-    interval_o(acc_interval)
+    .s_i(acc_s),
+    .interval_o(acc_interval)
 );
 
 assign acc_interval_o=acc_interval;
@@ -93,7 +93,7 @@ end
 
 for(genvar i=0;i<interval_size;i++) begin
     always_comb begin
-        interval_cnt_o=(acc_interval&(1<<i))?current_cnt:interval_cnt_i;
+        interval_cnt_o[i]=(acc_interval[i]&(1<<i))?current_cnt:interval_cnt_i[i];
     end
 end
 
@@ -105,28 +105,28 @@ logic [WIDTH-1:0] beta_t;
 fp16_add add1(
 .operands_i({a_acc_i,{~a_pos_i[15],a_pos_i[14:0]}}), // 2 operands
 .is_boxed_i(2'b11), // 2 operands
-.rnd_mode_i,
+//.rnd_mode_i,
   // Output signals
-.result_o(alpha_t),
-.status_o
+.result_o(alpha_t)
+//.status_o
 );
 
 fp16_add add2(
 .operands_i({b_acc_i,{~b_pos_i[15],b_pos_i[14:0]}}), // 2 operands
 .is_boxed_i(2'b11), // 2 operands
-.rnd_mode_i,
+//.rnd_mode_i,
   // Output signals
-.result_o(beta_t),
-.status_o
+.result_o(beta_t)
+//.status_o
 );
 
 fp16_mul mul1(
 .operands_i({alpha_t,acc_s}), // 2 operands
 .is_boxed_i(2'b11), // 2 operands
-.rnd_mode_i,
+//.rnd_mode_i
   // Output signals
-.result_o(_alpha_t),
-.status_o
+.result_o(_alpha_t)
+//.status_o
 );
 
 
@@ -150,6 +150,6 @@ always_ff @(posedge CLK_i or RST_i)begin
     else step=step+1;
 end
 
-assign finished=step>=J_size;
+assign finished=(step>=J_size);
 
 endmodule

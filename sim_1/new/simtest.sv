@@ -37,6 +37,7 @@ logic stage;
 logic operand1;
 logic operand2;
 logic mode;    //reconfigtile mode
+logic [100:0][15:0]op;
 
     /*
     pipe_stage2 p2
@@ -56,6 +57,7 @@ logic mode;    //reconfigtile mode
     .mode(mode)    //reconfigtile mode
     );
     */
+    /*
     pipe_stage_3 stage_3
     (
   .interval_lb(clk),
@@ -67,6 +69,41 @@ logic mode;    //reconfigtile mode
   .out_of_mode_interval(norm_n),
   .interval_cnt_o(mode)
 );
+*/
+pipe_stage5 pip5
+(
+.CLK_i(op[0]),
+.RST_i(op[1]),
+.acc_s(op[2]),
+.interval_cnt_i(op[3]),
+.mode_i(op[4]),
+.mode_o(op[5]),
+.interval_cnt_o(op[6]),
+
+.max_cnt_i(op[7]),
+.max_cnt_o(op[8]),
+
+.alpha_o(op[9]),
+._alpha_o(op[10]),
+.beta_o(op[11]),
+
+.acc_interval_o(op[12]), 
+
+.a_acc_i(op[13]),
+.a_pos_i(op[14]),
+.b_acc_i(op[15]),
+.b_pos_i(op[16]),
+.U_add(op[17]),
+
+
+.J_size(op[18]),
+.finished(op[19]),
+
+.mode(op[20])
+    //VPE always 1
+
+    );
+
 
     initial begin
         clk=0;
