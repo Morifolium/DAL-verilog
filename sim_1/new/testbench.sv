@@ -27,7 +27,7 @@ module testbench(
     logic [15:0]B;
     logic [15:0]C;
 
-fp16_mul add(
+fp16_add add(
   // Input signals
 .operands_i({A,B}), // 2 operands
 .is_boxed_i(3'b111), // 2 operands
