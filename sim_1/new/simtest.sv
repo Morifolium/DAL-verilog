@@ -58,7 +58,7 @@ logic [100:0][15:0]op;
     );
     */
     /*
-    pipe_stage_3 stage_3
+    pipe_stage3 stage_3
     (
   .interval_lb(clk),
   .interval_ub(rst),
