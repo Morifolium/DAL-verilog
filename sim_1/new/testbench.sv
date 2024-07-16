@@ -23,4 +23,24 @@
 module testbench(
 
     );
+    logic [15:0]A;
+    logic [15:0]B;
+    logic [15:0]C;
+
+fp16_mul add(
+  // Input signals
+.operands_i({A,B}), // 2 operands
+.is_boxed_i(3'b111), // 2 operands
+.rnd_mode_i(),
+  // Output signals
+.result_o(C),
+.status_o()
+);
+
+initial begin
+    A=16'b0100000000000000;
+    B=16'b0100000000000000;
+    #10
+    $finish;
+end
 endmodule
