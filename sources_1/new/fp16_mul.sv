@@ -17,7 +17,7 @@
 
 
 module fp16_mul #(
-  localparam fpnew_pkg::fp_format_e   FpFormat    = fpnew_pkg::fp_format_e'(3),
+  localparam fpnew_pkg::fp_format_e   FpFormat    = fpnew_pkg::fp_format_e'(2),
   localparam int unsigned             NumPipeRegs = 0,
   localparam fpnew_pkg::pipe_config_t PipeConfig  = fpnew_pkg::BEFORE,
   // Do not change
