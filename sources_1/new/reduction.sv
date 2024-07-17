@@ -23,7 +23,7 @@
 
 
 module reduction #(
-    localparam fpnew_pkg::fp_format_e   FpFormat    = fpnew_pkg::fp_format_e'(3),
+    localparam fpnew_pkg::fp_format_e   FpFormat    = fpnew_pkg::fp_format_e'(2),
     localparam int unsigned WIDTH = fpnew_pkg::fp_width(FpFormat),
     localparam tile_size=129,
     localparam parallel_size=3
@@ -53,7 +53,7 @@ for(genvar i=0;i<tile_size;i++) begin
     );
 
     fp16_add add2(
-    .operands_i({operand_i[2][i],acc}), // 2 operands
+    .operands_i({operand_i[2][i],acc[i]}), // 2 operands
     .is_boxed_i(2'b11), // 2 operands
     .rnd_mode_i(),
     // Output signals

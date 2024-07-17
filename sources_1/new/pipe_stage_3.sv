@@ -21,7 +21,7 @@
 `include "registers.svh"
 
 module pipe_stage3 #(
-    localparam fpnew_pkg::fp_format_e   FpFormat    = fpnew_pkg::fp_format_e'(3),
+    localparam fpnew_pkg::fp_format_e   FpFormat    = fpnew_pkg::fp_format_e'(2),
     localparam int unsigned WIDTH = fpnew_pkg::fp_width(FpFormat),
     localparam n=4096,
     localparam para=16,
@@ -96,7 +96,7 @@ module pipe_stage3 #(
         .is_boxed_i(2'b11),                              // 2 operands
         .rnd_mode_i(),
         // Output signals
-        .result_o  (s_score),
+        .result_o  (s_score[i]),
         .status_o  ()
     );
 
@@ -108,7 +108,7 @@ module pipe_stage3 #(
         // Input signals
         .operands_i({s_score[i], mode_interval_lb[i]}),  // 2 operands
         .is_boxed_i(2'b11),  // 2 operands
-        .op_i(fpnew_pkg::RTZ),  //cmp1_i<cmp2_i
+        .op_i(fpnew_pkg::CMP),  //cmp1_i<cmp2_i
         // Output signals
         //result_o(cmp_o),
         .extension_bit_o(out_of_mode_interval_l[i])
@@ -118,7 +118,7 @@ module pipe_stage3 #(
         // Input signals
         .operands_i({mode_interval_ub[i], s_score[i]}),  // 2 operands
         .is_boxed_i(2'b11),  // 2 operands
-        .op_i(fpnew_pkg::RTZ),  //cmp1_i<cmp2_i
+        .op_i(fpnew_pkg::CMP),  //cmp1_i<cmp2_i
         // Output signals
         //result_o(cmp_o),
         .extension_bit_o(out_of_mode_interval_r[i])

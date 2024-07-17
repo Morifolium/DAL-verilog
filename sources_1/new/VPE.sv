@@ -25,8 +25,8 @@ module VPE
         localparam parallel_size = 6,
         localparam pipe_stage=7,
         localparam tile_size=128,
-        localparam fpnew_pkg::fp_format_e       mul_fmt=fpnew_pkg::fp_format_e'(3),
-        localparam fpnew_pkg::fp_format_e       add_fmt=fpnew_pkg::fp_format_e'(3),
+        localparam fpnew_pkg::fp_format_e       mul_fmt=fpnew_pkg::fp_format_e'(2),
+        localparam fpnew_pkg::fp_format_e       add_fmt=fpnew_pkg::fp_format_e'(2),
         localparam int mul_width=fpnew_pkg::fp_width(mul_fmt),
         localparam int add_width=fpnew_pkg::fp_width(add_fmt)
     )
@@ -40,7 +40,7 @@ module VPE
         
     );
 
-    for(genvar i=0;i<tile_size;i++)begin
+    for(genvar i=0;i<parallel_size;i++)begin
         for(genvar j=0;j<pipe_stage;j++)begin
             reconf_tile VPE_tile(
             .vec1(operand1_i[i][j]),

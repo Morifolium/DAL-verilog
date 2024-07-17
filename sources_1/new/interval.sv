@@ -42,7 +42,7 @@ for(genvar i=0;i<num-1;i++)begin
     // Input signals
     .operands_i({s_i,boundary[i]}), // 2 operands
     .is_boxed_i(2'b11), // 2 operands
-    .op_i(fpnew_pkg::RTZ),
+    .op_i(fpnew_pkg::CMP),
     // Output signals
     .extension_bit_o(result[i+1])
 );

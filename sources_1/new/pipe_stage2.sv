@@ -32,7 +32,7 @@ module pipe_stage2 #(
     input logic RST_i,
     input logic stall_i,
 
-    input logic [2:0][para-1:0] stage_boundary,
+    input logic [6:0][para-1:0] stage_boundary,
 
     input logic [parallel_size-1:0][WIDTH-1:0] operand_i,
     input logic [parallel_size-1:0][WIDTH-1:0] scale_i,    // scale or norm_pos
@@ -177,7 +177,7 @@ module pipe_stage2 #(
         // Input signals
         .operands_i({cmp1_i, cmp2_i}),  // 2 operands
         .is_boxed_i(2'b11),  // 2 operands
-        .op_i(fpnew_pkg::RTZ),  //cmp1_i<cmp2_i
+        .op_i(fpnew_pkg::CMP),  //cmp1_i<cmp2_i
         // Output signals
         //result_o(cmp_o),
         .extension_bit_o(cmp_o)

@@ -28,7 +28,7 @@ module FFReduct #(
     input logic [WIDTH-1:0] reset_value,
     input logic clk,
     input logic rst,
-    output logic q_o
+    output logic[WIDTH-1:0] q_o
     );
 logic [WIDTH-1:0] q;
 

@@ -23,7 +23,7 @@
 
 
 module pipe_stage5 #(
-    localparam fpnew_pkg::fp_format_e   FpFormat    = fpnew_pkg::fp_format_e'(3),
+    localparam fpnew_pkg::fp_format_e   FpFormat    = fpnew_pkg::fp_format_e'(2),
     localparam int unsigned WIDTH = 16,
     localparam interval_size=8,
     localparam para=16,
@@ -121,7 +121,7 @@ module pipe_stage5 #(
     );
 
     fp16_mul mul1 (
-        .operands_i({alpha_t, acc_s}),  // 2 operands
+        .operands_i({16'b0,alpha_t, acc_s}),  // 2 operands
         .is_boxed_i(2'b11),  // 2 operands
         //.rnd_mode_i
         // Output signals

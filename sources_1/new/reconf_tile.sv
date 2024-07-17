@@ -59,11 +59,11 @@ for(genvar i=0;i<tile_size;i++)begin
     // Input signals
     .operands_i({mulsrc1[i],mulsrc2[i]}),  // 2 operands
     .is_boxed_i(2'b11),          // 2 operands
-    .rnd_mode_i,
+    .rnd_mode_i(),
 
     // Output signals
     .result_o(muldst[i]),
-    .status_o
+    .status_o()
     );
 end
 
@@ -86,14 +86,14 @@ for (genvar i=0;i<tile_size;i=i+2)begin
     assign addsrc1[i]={muldst[i]};
     assign addsrc2[i]={muldst[i+1]};
 end
-for(genvar i=2;i<(tile_size);i=i*2)begin
-    for(genvar j=i-1;j<tile_size;j+=i)begin
+for(genvar i=4;i<=(tile_size);i=i*2)begin
+    for(genvar j=i/2-1;j<tile_size;j+=i)begin
         assign addsrc1[i]={adddst[j-i/2]};
         assign addsrc2[i]={adddst[j+i/2]};
     end
 end
 
-assign o_scal=adddst[1];
+assign o_scal=adddst[63];
 
 
 for(genvar i=0;i<tile_size;i++)begin
@@ -101,10 +101,10 @@ for(genvar i=0;i<tile_size;i++)begin
     // Input signals
     .operands_i({addsrc1[i],addsrc2[i]}),  // 2 operands
     .is_boxed_i(2'b11),                  // 2 operands
-    .rnd_mode_i,
+    .rnd_mode_i(),
     // Output signals
     .result_o(adddst[i]),
-    .status_o
+    .status_o()
 );
 end
 

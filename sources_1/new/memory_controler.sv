@@ -29,8 +29,8 @@ module memory_controler #(
 ) (
     input logic CLK_i,
     input logic RST_i,
-    input [1023:0] HBM_i,  //hbm2e
-    output [1023:0] HBM_o
+    input [parallel_size-1:0][pipe_stage:0][tile_size-1:0][WIDTH-1:0] HBM_i,  //hbm2e
+    output [parallel_size-1:0][pipe_stage:0][tile_size-1:0][WIDTH-1:0] HBM_o
 
 );
 
@@ -43,23 +43,7 @@ module memory_controler #(
   logic [parallel_size-1:0][pipe_stage-1:0][tile_size-1:0][WIDTH-1:0] VPE_v2_i;
   logic [parallel_size-1:0][pipe_stage-1:0][WIDTH-1:0] VPE_s1_i;
 
-  logic [255:0][WIDTH-1:0] sram8_i;
-  logic [255:0][WIDTH-1:0] sram7_i;
-  logic [255:0][WIDTH-1:0] sram6_i;
-  logic [255:0][WIDTH-1:0] sram5_i;
-  logic [255:0][WIDTH-1:0] sram4_i;
-  logic [255:0][WIDTH-1:0] sram3_i;
-  logic [255:0][WIDTH-1:0] sram2_i;
-  logic [255:0][WIDTH-1:0] sram1_i;
 
-  logic [255:0][WIDTH-1:0] sram8_o;
-  logic [255:0][WIDTH-1:0] sram7_o;
-  logic [255:0][WIDTH-1:0] sram6_o;
-  logic [255:0][WIDTH-1:0] sram5_o;
-  logic [255:0][WIDTH-1:0] sram4_o;
-  logic [255:0][WIDTH-1:0] sram3_o;
-  logic [255:0][WIDTH-1:0] sram2_o;
-  logic [255:0][WIDTH-1:0] sram1_o;
 
   Rom_Interval u_Rom_Interval (.Rom_o(rom_o));
 
@@ -74,8 +58,41 @@ module memory_controler #(
   );
 
   for (genvar i = 0; i < parallel_size; i++) begin
+    logic [255:0][WIDTH-1:0] sram8_i;
+    logic [255:0][WIDTH-1:0] sram7_i;
+    logic [255:0][WIDTH-1:0] sram6_i;
+    logic [255:0][WIDTH-1:0] sram5_i;
+    logic [255:0][WIDTH-1:0] sram4_i;
+    logic [255:0][WIDTH-1:0] sram3_i;
+    logic [255:0][WIDTH-1:0] sram2_i;
+    logic [255:0][WIDTH-1:0] sram1_i;
+
+    logic [255:0][WIDTH-1:0] sram8_o;
+    logic [255:0][WIDTH-1:0] sram7_o;
+    logic [255:0][WIDTH-1:0] sram6_o;
+    logic [255:0][WIDTH-1:0] sram5_o;
+    logic [255:0][WIDTH-1:0] sram4_o;
+    logic [255:0][WIDTH-1:0] sram3_o;
+    logic [255:0][WIDTH-1:0] sram2_o;
+    logic [255:0][WIDTH-1:0] sram1_o;
+
     logic [3:0] mode_o;
     logic [3:0] finish_o;
+    assign sram1_i = HBM_i[i][0];
+    assign sram2_i = HBM_i[i][1];
+    assign sram3_i = HBM_i[i][2];
+    assign sram4_i = HBM_i[i][3];
+
+    assign sram1_o = HBM_o[i][0];
+    assign sram2_o = HBM_o[i][1];
+    assign sram3_o = HBM_o[i][2];
+    assign sram4_o = HBM_o[i][3];
+    assign sram5_o = HBM_o[i][5];
+    assign sram6_o = HBM_o[i][6];
+    assign sram7_o = HBM_o[i][7];
+    assign sram8_o = HBM_o[i][8];
+
+
 
 
     pipe_stage2 u_pipe_stage2 (
@@ -127,10 +144,10 @@ module memory_controler #(
         .mode_o        ({sram8_i[65:64]}),
         .interval_cnt_o(sram8_i[63:57]),
         .max_cnt_o     (sram8_i[65:54]),
-        .alpha_o       ({sram5_i[0], sram6_i[0]}),        // to SRAM4/5/6
-        ._alpha_o      ({sram5_i[1], sram6_i[1]}),        // to SRAM4/5/6
-        .beta_o        ({sram5_i[2], sram6_i[2]}),        // to SRAM4/5/6
-        .acc_interval_o({sram5_i[3], sram6_i[3]}),        // to SRAM4/5/6
+        .alpha_o       ({sram5_i[4], sram6_i[4]}),        // to SRAM4/5/6
+        ._alpha_o      ({sram5_i[5], sram6_i[5]}),        // to SRAM4/5/6
+        .beta_o        ({sram5_i[6], sram6_i[6]}),        // to SRAM4/5/6
+        .acc_interval_o({sram5_i[7], sram6_i[7]}),        // to SRAM4/5/6
         .U_add         (),                                // to SRAM4/5/6
         .finished      (finish_o[2]),
         .mode          (mode_o[2])
@@ -141,7 +158,8 @@ module memory_controler #(
     assign VPE_v2_i[i][3] = sram3_o;
 
 
-    logic [2:0][WIDTH-1:0]scale_wire;
+    logic [2:0][WIDTH-1:0] scale_wire;
+    logic [parallel_size-1:0][tile_size-1:0][WIDTH-1:0] acc_o;
     pipe_stage6 u_pipe_stage6 (
         .clk_i         (CLK_i),
         .rst_i         (RST_i),
@@ -152,11 +170,12 @@ module memory_controler #(
         .operand4_i    (sram8_o[76:74]),
         .stage_boundary(),
         .set_i         (0),
-        .scale(scale_wire),
+        .scale         (scale_wire),
         .finished      (finish_o[3]),
         .mode          (mode_o[3]),
-        .acc_o         (sram1_i)                                         //to SRAM
+        .acc_o         (acc_o)                                                //to SRAM
     );
+    assign sram8_i[255:128]=acc_o;
 
     assign mode[i][4] = mode_o[3];
     assign mode[i][5] = mode_o[3];
@@ -166,7 +185,7 @@ module memory_controler #(
     assign VPE_v2_i[i][5] = sram6_o;
     assign VPE_v1_i[i][6] = sram7_o;
 
-    assign VPE_s1_i[4:6]=scale_wire;
+    assign VPE_s1_i[i][6:4] = scale_wire;
 
     assign finish[i] = |finish_o;
 
