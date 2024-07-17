@@ -26,10 +26,11 @@ module sram_controler #(
 )(
     input logic CKL_i,
     input logic RST_i,
-    input logic [WIDTH-1:0]ADDR, // 一次读取BITWIDTH*WIDTH的数据
-    input logic [BITWIDTH-1:0][WIDTH-1:0] SRAM_i, //hbm2e
+    input logic [WIDTH-1:0]ADDR_in, // 一次读取BITWIDTH*WIDTH的数据
+    input logic [WIDTH-1:0]ADDR_out,
+    input logic [BITWIDTH-1:0][WIDTH-1:0] SRAM_i, 
     output logic [BITWIDTH-1:0][WIDTH-1:0] SRAM_o
-    );
+);
 
     
 

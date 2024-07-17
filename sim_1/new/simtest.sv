@@ -20,26 +20,24 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module simtest(
+module simtest ();
 
-    );
+  logic clk;
+  logic rst;
+  logic stall;
+  logic boundary;
+  logic operand_i;
+  logic scale_i;  // scale or norm_pos
+  logic norm_n;
+  logic pos;
+  logic finished;
+  logic stage;
+  logic operand1;
+  logic operand2;
+  logic mode;  //reconfigtile mode
+  logic [100:0][15:0] op;
 
-logic clk;
-logic rst;
-logic stall;
-logic boundary;
-logic operand_i; 
-logic scale_i; // scale or norm_pos
-logic norm_n;
-logic pos;
-logic finished;
-logic stage;
-logic operand1;
-logic operand2;
-logic mode;    //reconfigtile mode
-logic [100:0][15:0]op;
-
-    /*
+  /*
     pipe_stage2 p2
     (
     .CLK_i(clk),
@@ -57,7 +55,7 @@ logic [100:0][15:0]op;
     .mode(mode)    //reconfigtile mode
     );
     */
-    /*
+  /*
     pipe_stage3 stage_3
     (
   .interval_lb(clk),
@@ -71,7 +69,7 @@ logic [100:0][15:0]op;
 );
 */
 
-/*
+  /*
 pipe_stage5 pip5
 (
 .CLK_i(op[0]),
@@ -107,7 +105,7 @@ pipe_stage5 pip5
     );
 
 */
-
+  /*
 pipe_stage6 ppe6
 (
 .clk_i(op[0][0]),
@@ -123,18 +121,26 @@ pipe_stage6 ppe6
 .mode(op[10][0]),
 .acc_o(op[11])
 );
+*/
+
+  memory_controler u_memory_controler (
+      .CLK_i(),
+      .RST_i(),
+      .HBM_i(),
+
+      .HBM_o()
+  );
 
 
 
 
-    initial begin
-        op[0]=0;
-        op[1]=0;
-        #10
-        $finish;
-    end
+  initial begin
+    op[0] = 0;
+    op[1] = 0;
+    #10 $finish;
+  end
 
-    
+
 
 
 endmodule

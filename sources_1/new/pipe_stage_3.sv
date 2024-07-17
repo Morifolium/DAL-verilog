@@ -30,7 +30,7 @@ module pipe_stage3 #(
 
     input logic [2:0][WIDTH-1:0] interval_lb,
     input logic [2:0][WIDTH-1:0] interval_ub,
-    input logic [3:0][2:0] mode,
+    input logic [3:0][7:0] mode,
     input logic [3:0][para-1:0] interval_cnt_i,
     input logic [WIDTH-1:0] max_score,
     input logic [3:0][WIDTH-1:0] s_i,
@@ -51,35 +51,35 @@ module pipe_stage3 #(
 
     always_comb begin  //lut 合并乘一个
       unique case (mode[i])
-        0: begin
+        8'b1: begin
           mode_interval_lb[i] = interval_lb[0];
           mode_interval_ub[i] = interval_ub[0];
         end
-        1: begin
+        2: begin
           mode_interval_lb[i] = interval_lb[1];
           mode_interval_ub[i] = interval_ub[1];
         end
-        2: begin
+        4: begin
           mode_interval_lb[i] = interval_lb[2];
           mode_interval_ub[i] = interval_ub[2];
         end
-        3: begin
+        8: begin
           mode_interval_lb[i] = interval_lb[3];
           mode_interval_ub[i] = interval_ub[3];
         end
-        4: begin
+        16: begin
           mode_interval_lb[i] = interval_lb[4];
           mode_interval_ub[i] = interval_ub[4];
         end
-        5: begin
+        32: begin
           mode_interval_lb[i] = interval_lb[5];
           mode_interval_ub[i] = interval_ub[5];
         end
-        6: begin
+        64: begin
           mode_interval_lb[i] = interval_lb[6];
           mode_interval_ub[i] = interval_ub[6];
         end
-        7: begin
+        128: begin
           mode_interval_lb[i] = interval_lb[7];
           mode_interval_ub[i] = interval_ub[7];
         end

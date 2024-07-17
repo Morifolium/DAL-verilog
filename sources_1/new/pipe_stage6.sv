@@ -41,7 +41,9 @@ module pipe_stage6 #(
     input logic [parallel_size-1:0][tile_size-1:0][WIDTH-1:0] set_i,
 
     output logic mode,
-    output logic [parallel_size-1:0][tile_size-1:0][WIDTH-1:0] acc_o
+    output logic [parallel_size-1:0][WIDTH-1:0] scale,
+    output logic [parallel_size-1:0][tile_size-1:0][WIDTH-1:0] acc_o,
+    output logic [4:0] stage
 
 );
 
@@ -49,7 +51,7 @@ module pipe_stage6 #(
 
 
   logic [para-1:0] step;
-  logic [4:0] stage;
+
 
   always_ff @(posedge clk_i or rst_i) begin
     if (rst_i) step = 0;
@@ -128,7 +130,8 @@ module pipe_stage6 #(
         .status_o()
     );
 
-    assign reduction_i = {operandv_i[i], add3_o[i]};
+    assign reduction_i[i] = {operandv_i[i], add3_o[i]};
+    assign scale[i]=add2_o;
 
   end
 
@@ -137,7 +140,7 @@ module pipe_stage6 #(
       .CLK_i(clk_i),
       .RST_i(step==stage_boundary[1]|step==stage_boundary[4]|step==stage_boundary[5]|step==stage_boundary[6]),
       .set_reg_i(set_i),
-      .operand_i(),
+      .operand_i(reduction_i),
       .reduction_o(acc_o)
   );
 
