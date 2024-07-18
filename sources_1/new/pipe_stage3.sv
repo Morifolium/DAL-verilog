@@ -30,21 +30,22 @@ module pipe_stage3 #(
 
     input logic [2:0][WIDTH-1:0] interval_lb,
     input logic [2:0][WIDTH-1:0] interval_ub,
-    input logic [3:0][7:0] mode,
-    input logic [3:0][para-1:0] interval_cnt_i,
+    input logic [parallel_size-1:0][7:0] mode,
+    input logic [parallel_size-1:0][para-1:0] interval_cnt_i,
     input logic [WIDTH-1:0] max_score,
-    input logic [3:0][WIDTH-1:0] s_i,
-    output logic [3:0] out_of_mode_interval,
-    output logic [3:0][para-1:0] interval_cnt_o
+    input logic [parallel_size-1:0][WIDTH-1:0] s_i,
+    output logic [parallel_size-1:0] out_of_mode_interval,
+    output logic [parallel_size-1:0][para-1:0] interval_cnt_o
 
 );
 
   logic [3:0][WIDTH-1:0] mode_interval_lb;
   logic [3:0][WIDTH-1:0] mode_interval_ub;
-  logic [3:0][WIDTH-1:0] s_score;
 
-  logic [3:0] out_of_mode_interval_l;
-  logic [3:0] out_of_mode_interval_r;
+  logic [parallel_size-1:0][WIDTH-1:0] s_score;
+
+  logic [parallel_size-1:0] out_of_mode_interval_l;
+  logic [parallel_size-1:0] out_of_mode_interval_r;
 
 
   for (genvar i = 0; i < parallel_size; i++) begin

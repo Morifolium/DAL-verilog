@@ -56,7 +56,7 @@ module pipe_stage2 #(
 
 
   logic [para-1:0] step;
-  always_ff @(posedge CLK_i or RST_i) begin
+  always_ff @(posedge CLK_i or posedge RST_i) begin
     if (RST_i) begin
       step  <= 0;
       stage <= 0;
@@ -122,10 +122,11 @@ module pipe_stage2 #(
       if (stage == 5) operand1_o[i] = sqrt_o;
       else if (stage == 6) begin
         operand1_o[i] = center_ids;
-        operand2_o[i] = dnorm;
+        //operand2_o[i] = dnorm;
       end else if (stage == 4) operand1_o[i] = sqrt_o;
       else operand1_o[i] = div_mul_o;
     end
+    assign operand2_o[i] = dnorm;
 
 
 

@@ -30,8 +30,8 @@ input logic __clk,
 input logic __arst_n
 );
     logic [WIDTH-1:0]__q;    
-  always_ff @(posedge (__clk) or negedge (__arst_n)) begin 
-    if (!__arst_n) begin                                  
+  always_ff @(posedge (__clk) or posedge (__arst_n)) begin 
+    if (__arst_n) begin                                  
       __q <= (__reset_value);                              
     end else begin                                         
       __q <= (__q);                                        

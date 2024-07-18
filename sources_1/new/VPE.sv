@@ -25,10 +25,8 @@ module VPE
         localparam parallel_size = 6,
         localparam pipe_stage=7,
         localparam tile_size=128,
-        localparam fpnew_pkg::fp_format_e       mul_fmt=fpnew_pkg::fp_format_e'(2),
-        localparam fpnew_pkg::fp_format_e       add_fmt=fpnew_pkg::fp_format_e'(2),
-        localparam int mul_width=fpnew_pkg::fp_width(mul_fmt),
-        localparam int add_width=fpnew_pkg::fp_width(add_fmt)
+        localparam int mul_width=16,
+        localparam int add_width=16
     )
     (
         input [parallel_size-1:0][pipe_stage-1:0][tile_size-1:0][mul_width-1:0] operand1_i,

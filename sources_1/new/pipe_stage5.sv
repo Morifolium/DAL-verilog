@@ -91,11 +91,12 @@ module pipe_stage5 #(
     end
 
 
-    for (genvar i = 0; i < interval_size; i++) begin
+    for (genvar j = 0; j < interval_size; j++) begin
       always_comb begin
-        interval_cnt_o[i] = (acc_interval & (1 << i)) ? current_cnt : interval_cnt_i[i];
+        interval_cnt_o[i] = (acc_interval & (1 << j)) ? current_cnt : interval_cnt_i[i];
       end
     end
+    
 
     logic [WIDTH-1:0] alpha_t;
     logic [WIDTH-1:0] _alpha_t;
@@ -146,9 +147,9 @@ module pipe_stage5 #(
 
   logic [para-1:0] step;
 
-  always_ff @(posedge CLK_i or RST_i) begin
-    if (RST_i) step = 0;
-    else step = step + 1;
+  always_ff @(posedge CLK_i or posedge RST_i) begin
+    if (RST_i) step <= 0;
+    else step <= step + 1;
   end
 
   assign finished = (step >= J_size);

@@ -22,7 +22,7 @@
 `include "registers.svh"
 
 module interval#(
-    localparam fpnew_pkg::fp_format_e   FpFormat    = fpnew_pkg::fp_format_e'(3),
+    localparam fpnew_pkg::fp_format_e   FpFormat    = fpnew_pkg::fp_format_e'(2),
     localparam int unsigned WIDTH = fpnew_pkg::fp_width(FpFormat),
     localparam num=8
 )

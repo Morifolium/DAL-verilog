@@ -107,7 +107,7 @@ module memory_controler #(
         .finished      (finish_o[0]),
         .stage         (),
         .operand1_o    (sram8_o[7:6]),                    //to SRAM7
-        .operand2_o    (sram8_o[9:7]),                    //to SRAM7
+        .operand2_o    (sram8_o[9:8]),                    //to SRAM7
         .mode          (mode_o[0])
     );
 
@@ -173,9 +173,9 @@ module memory_controler #(
         .scale         (scale_wire),
         .finished      (finish_o[3]),
         .mode          (mode_o[3]),
-        .acc_o         (acc_o)                                                //to SRAM
+        .acc_o         (acc_o)                                           //to SRAM
     );
-    assign sram8_i[255:128]=acc_o;
+    assign sram8_i[255:128] = acc_o;
 
     assign mode[i][4] = mode_o[3];
     assign mode[i][5] = mode_o[3];
@@ -193,7 +193,7 @@ module memory_controler #(
         .BITWIDTH(256),
         .WIDTH   (16)
     ) u_sram_controler1 (
-        .CKL_i(CKL_i),
+        .CKL_i(CLK_i),
         .RST_i(RST_i),
         .ADDR_in(),
         .ADDR_out(),
@@ -205,7 +205,7 @@ module memory_controler #(
         .BITWIDTH(256),
         .WIDTH   (16)
     ) u_sram_controler2 (
-        .CKL_i(CKL_i),
+        .CKL_i(CLK_i),
         .RST_i(RST_i),
         .ADDR_in(),
         .ADDR_out(),
@@ -217,7 +217,7 @@ module memory_controler #(
         .BITWIDTH(256),
         .WIDTH   (16)
     ) u_sram_controler3 (
-        .CKL_i(CKL_i),
+        .CKL_i(CLK_i),
         .RST_i(RST_i),
         .ADDR_in(),
         .ADDR_out(),
@@ -229,7 +229,7 @@ module memory_controler #(
         .BITWIDTH(256),
         .WIDTH   (16)
     ) u_sram_controler4 (
-        .CKL_i(CKL_i),
+        .CKL_i(CLK_i),
         .RST_i(RST_i),
         .ADDR_in(),
         .ADDR_out(),
@@ -241,7 +241,7 @@ module memory_controler #(
         .BITWIDTH(256),
         .WIDTH   (16)
     ) u_sram_controler5 (
-        .CKL_i(CKL_i),
+        .CKL_i(CLK_i),
         .RST_i(RST_i),
         .ADDR_in(),
         .ADDR_out(),
@@ -253,7 +253,7 @@ module memory_controler #(
         .BITWIDTH(256),
         .WIDTH   (16)
     ) u_sram_controler6 (
-        .CKL_i(CKL_i),
+        .CKL_i(CLK_i),
         .RST_i(RST_i),
         .ADDR_in(),
         .ADDR_out(),
@@ -265,7 +265,7 @@ module memory_controler #(
         .BITWIDTH(256),
         .WIDTH   (16)
     ) u_sram_controler7 (
-        .CKL_i(CKL_i),
+        .CKL_i(CLK_i),
         .RST_i(RST_i),
         .ADDR_in(),
         .ADDR_out(),
@@ -277,7 +277,7 @@ module memory_controler #(
         .BITWIDTH(256),
         .WIDTH   (16)
     ) u_sram_controler8 (
-        .CKL_i(CKL_i),
+        .CKL_i(CLK_i),
         .RST_i(RST_i),
         .ADDR_in(),
         .ADDR_out(),

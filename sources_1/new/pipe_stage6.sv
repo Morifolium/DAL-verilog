@@ -53,8 +53,8 @@ module pipe_stage6 #(
   logic [para-1:0] step;
 
 
-  always_ff @(posedge clk_i or rst_i) begin
-    if (rst_i) step = 0;
+  always_ff @(posedge clk_i or posedge rst_i) begin
+    if (rst_i) step <= 0;
     else begin
       step <= step + 1;
       if (step < stage_boundary[0]) stage <= 0;

@@ -44,13 +44,15 @@ module fp16_mul #(
   localparam int unsigned PRECISION_BITS = MAN_BITS + 1;
   // The lower 2p+3 bits of the internal FMA result will be needed for leading-zero detection
   localparam int unsigned LOWER_SUM_WIDTH = 2 * PRECISION_BITS + 3;
-  localparam int unsigned LZC_RESULT_WIDTH = $clog2(LOWER_SUM_WIDTH);
+  //localparam int unsigned LZC_RESULT_WIDTH = $clog2(LOWER_SUM_WIDTH);
+  localparam int unsigned LZC_RESULT_WIDTH = 5;
   // Internal exponent width of FMA must accomodate all meaningful exponent values in order to avoid
   // datapath leakage. This is either given by the exponent bits or the width of the LZC result.
   // In most reasonable FP formats the internal exponent will be wider than the LZC result.
   localparam int unsigned EXP_WIDTH = unsigned'(fpnew_pkg::maximum(EXP_BITS + 2, LZC_RESULT_WIDTH));
   // Shift amount width: maximum internal mantissa size is 3p+4 bits
-  localparam int unsigned SHIFT_AMOUNT_WIDTH = $clog2(3 * PRECISION_BITS + 5);
+  //localparam int unsigned SHIFT_AMOUNT_WIDTH = $clog2(3 * PRECISION_BITS + 5);
+  localparam int unsigned SHIFT_AMOUNT_WIDTH = 6;
   // Pipelines
   localparam NUM_INP_REGS = 0;
   localparam NUM_MID_REGS = 0;
