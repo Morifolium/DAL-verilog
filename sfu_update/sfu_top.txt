@@ -1,0 +1,3 @@
+SpecialFunctionUnit
+clk
+rst_n
