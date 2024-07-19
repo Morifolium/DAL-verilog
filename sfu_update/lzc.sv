@@ -53,6 +53,8 @@ module lzc #(
 
     //localparam int unsigned NumLevels = $clog2(WIDTH);
     localparam int unsigned NumLevels = 6;
+    //localparam int unsigned NumLevels = $clog2(WIDTH);
+    localparam int unsigned NumLevels = 6;
 
     // pragma translate_off
     initial begin
@@ -110,7 +112,7 @@ module lzc #(
       end
     end
 
-    assign cnt_o   = NumLevels > unsigned'(0) ? index_nodes[0] : {($clog2(WIDTH)) {1'b0}};
+    assign cnt_o = NumLevels > unsigned'(0) ? index_nodes[0] : {(8'h6) {1'b0}};
     assign empty_o = NumLevels > unsigned'(0) ? ~sel_nodes[0] : ~(|in_i);
 
   end : gen_lzc
