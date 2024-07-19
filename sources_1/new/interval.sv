@@ -48,10 +48,11 @@ for(genvar i=0;i<num-1;i++)begin
     .extension_bit_o(result[i+1])
 );
 
+end
+
 for(genvar i=0;i<num;i++)
     assign interval_o[i]=result[i]^result[i+1];
 
-end
 
 
 
