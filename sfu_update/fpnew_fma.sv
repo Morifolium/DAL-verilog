@@ -66,13 +66,16 @@ module fpnew_fma #(
   localparam int unsigned PRECISION_BITS = MAN_BITS + 1;
   // The lower 2p+3 bits of the internal FMA result will be needed for leading-zero detection
   localparam int unsigned LOWER_SUM_WIDTH  = 2 * PRECISION_BITS + 3;
-  localparam int unsigned LZC_RESULT_WIDTH = $clog2(LOWER_SUM_WIDTH);
+  //localparam int unsigned LZC_RESULT_WIDTH = $clog2(LOWER_SUM_WIDTH);
+  localparam int unsigned LZC_RESULT_WIDTH = 6;
+  
   // Internal exponent width of FMA must accomodate all meaningful exponent values in order to avoid
   // datapath leakage. This is either given by the exponent bits or the width of the LZC result.
   // In most reasonable FP formats the internal exponent will be wider than the LZC result.
   localparam int unsigned EXP_WIDTH = unsigned'(fpnew_pkg::maximum(EXP_BITS + 2, LZC_RESULT_WIDTH));
   // Shift amount width: maximum internal mantissa size is 3p+4 bits
-  localparam int unsigned SHIFT_AMOUNT_WIDTH = $clog2(3 * PRECISION_BITS + 5);
+  //localparam int unsigned SHIFT_AMOUNT_WIDTH = $clog2(3 * PRECISION_BITS + 5);
+  localparam int unsigned SHIFT_AMOUNT_WIDTH = 6;
   // Pipelines
   localparam NUM_INP_REGS = PipeConfig == fpnew_pkg::BEFORE
                             ? NumPipeRegs
@@ -137,18 +140,18 @@ module fpnew_fma #(
     assign inp_pipe_ready[i] = inp_pipe_ready[i+1] | ~inp_pipe_valid_q[i+1];
     // Valid: enabled by ready signal, synchronous clear with the flush signal
     `FFLARNC(inp_pipe_valid_q[i+1], inp_pipe_valid_q[i], inp_pipe_ready[i], flush_i, 1'b0, clk_i,
-             rst_ni)
+             rst_ni);
     // Enable register if pipleine ready and a valid data item is present
     assign reg_ena = (inp_pipe_ready[i] & inp_pipe_valid_q[i]) | reg_ena_i[i];
     // Generate the pipeline registers within the stages, use enable-registers
-    `FFL(inp_pipe_operands_q[i+1], inp_pipe_operands_q[i], reg_ena, '0)
-    `FFL(inp_pipe_is_boxed_q[i+1], inp_pipe_is_boxed_q[i], reg_ena, '0)
-    `FFL(inp_pipe_rnd_mode_q[i+1], inp_pipe_rnd_mode_q[i], reg_ena, fpnew_pkg::RNE)
-    `FFL(inp_pipe_op_q[i+1], inp_pipe_op_q[i], reg_ena, fpnew_pkg::FMADD)
-    `FFL(inp_pipe_op_mod_q[i+1], inp_pipe_op_mod_q[i], reg_ena, '0)
-    `FFL(inp_pipe_tag_q[i+1], inp_pipe_tag_q[i], reg_ena, TagType'('0))
-    `FFL(inp_pipe_mask_q[i+1], inp_pipe_mask_q[i], reg_ena, '0)
-    `FFL(inp_pipe_aux_q[i+1], inp_pipe_aux_q[i], reg_ena, AuxType'('0))
+    `FFL(inp_pipe_operands_q[i+1], inp_pipe_operands_q[i], reg_ena, '0);
+    `FFL(inp_pipe_is_boxed_q[i+1], inp_pipe_is_boxed_q[i], reg_ena, '0);
+    `FFL(inp_pipe_rnd_mode_q[i+1], inp_pipe_rnd_mode_q[i], reg_ena, fpnew_pkg::RNE);
+    `FFL(inp_pipe_op_q[i+1], inp_pipe_op_q[i], reg_ena, fpnew_pkg::FMADD);
+    `FFL(inp_pipe_op_mod_q[i+1], inp_pipe_op_mod_q[i], reg_ena, '0);
+    `FFL(inp_pipe_tag_q[i+1], inp_pipe_tag_q[i], reg_ena, TagType'('0));
+    `FFL(inp_pipe_mask_q[i+1], inp_pipe_mask_q[i], reg_ena, '0);
+    `FFL(inp_pipe_aux_q[i+1], inp_pipe_aux_q[i], reg_ena, AuxType'('0));
   end
 
   // -----------------

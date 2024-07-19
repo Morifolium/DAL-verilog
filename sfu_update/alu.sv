@@ -23,7 +23,7 @@ module alu #(
             .mode   (op),
             .op_a   (a_vec[i]),
             .op_b   (b_vec[i]),
-            .done   (valid_o),
+            .done   (valid_o), //”–Œ Ã‚
             .res_o  (res_o[i])
         );
     end

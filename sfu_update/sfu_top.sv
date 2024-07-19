@@ -100,7 +100,7 @@ always_ff @( posedge clk or negedge rst_n ) begin : alu_ctrl
             alu_rst_n <= 1;
             if(ln_valid && !vpe_valid_o)begin
                 op_alu_a <= data_i;
-                op_alu_b <= '{default: '{equation}};
+                op_alu_b <= '{128 {equation}};        // ÓÐÎÊÌâ
                 op_alu   <= 1'b1;  // sub
             end
             else if(alu_valid && !vpe_valid_i) begin
@@ -110,7 +110,7 @@ always_ff @( posedge clk or negedge rst_n ) begin : alu_ctrl
             end
             else if(vpe_valid_i) begin
                 op_alu_a <= res_vpe_vec;
-                op_alu_b <= '{default: '{beta}};
+                op_alu_b <= '{128{beta}};
                 op_alu   <= 1'b0;
                 data_o   <= res_alu;
             end

@@ -54,7 +54,6 @@ module lzc #(
     //localparam int unsigned NumLevels = $clog2(WIDTH);
     localparam int unsigned NumLevels = 6;
     //localparam int unsigned NumLevels = $clog2(WIDTH);
-    localparam int unsigned NumLevels = 6;
 
     // pragma translate_off
     initial begin
