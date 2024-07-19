@@ -21,15 +21,14 @@
 `include "registers.svh"
 
 module pipe_stage3 #(
-    localparam fpnew_pkg::fp_format_e   FpFormat    = fpnew_pkg::fp_format_e'(2),
-    localparam int unsigned WIDTH = fpnew_pkg::fp_width(FpFormat),
+    localparam int unsigned WIDTH = 16,
     localparam n=4096,
     localparam para=16,
     localparam parallel_size=12
 ) (
 
-    input logic [2:0][WIDTH-1:0] interval_lb,
-    input logic [2:0][WIDTH-1:0] interval_ub,
+    input logic [7:0][WIDTH-1:0] interval_lb,
+    input logic [7:0][WIDTH-1:0] interval_ub,
     input logic [parallel_size-1:0][7:0] mode,
     input logic [parallel_size-1:0][para-1:0] interval_cnt_i,
     input logic [WIDTH-1:0] max_score,
@@ -39,8 +38,8 @@ module pipe_stage3 #(
 
 );
 
-  logic [3:0][WIDTH-1:0] mode_interval_lb;
-  logic [3:0][WIDTH-1:0] mode_interval_ub;
+  logic [parallel_size-1:0][WIDTH-1:0] mode_interval_lb;
+  logic [parallel_size-1:0][WIDTH-1:0] mode_interval_ub;
 
   logic [parallel_size-1:0][WIDTH-1:0] s_score;
 
@@ -50,7 +49,7 @@ module pipe_stage3 #(
 
   for (genvar i = 0; i < parallel_size; i++) begin
 
-    always_comb begin  //lut 合并乘一个
+    always_comb begin  //lut 合并乘一�?
       unique case (mode[i])
         8'b1: begin
           mode_interval_lb[i] = interval_lb[0];

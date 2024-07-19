@@ -107,7 +107,7 @@ module pipe_stage2 #(
 
     logic [WIDTH-1:0] cmp1_i;
     logic [WIDTH-1:0] cmp2_i;
-    logic [WIDTH-1:0] cmp_o;
+    logic  cmp_o;
 
 
     // div_i
@@ -116,7 +116,7 @@ module pipe_stage2 #(
       else div_i = scale_i[i];
     end
 
-    //sram 6个bank 两个向量的位宽
+    //sram 6个bank 两个向量的位�?
     //operand_o
     always_comb begin
       if (stage == 5) operand1_o[i] = sqrt_o;
@@ -188,7 +188,7 @@ module pipe_stage2 #(
     //FFAR(max_id,max_id, pos, CLK_i, cmp_o); //max_id
     FFReg Reg1 (
         .__q_o(max_cos),
-        .__reset_value((RST_i ? 0 : div_mul_o)),
+        .__reset_value((RST_i ? 16'b0 : div_mul_o)),
         .__clk(CLK_i),
         .__arst_n(cmp_o | RST_i)
     );

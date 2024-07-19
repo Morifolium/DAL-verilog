@@ -36,9 +36,9 @@ module pipe_stage6 #(
     input logic [parallel_size-1:0][WIDTH-1:0] operand2_i,
     input logic [parallel_size-1:0][WIDTH-1:0] operand3_i,
     input logic [parallel_size-1:0][WIDTH-1:0] operand4_i,
-    input logic [3:0][para-1:0] stage_boundary,
+    input logic [7:0][para-1:0] stage_boundary,
 
-    input logic [parallel_size-1:0][tile_size-1:0][WIDTH-1:0] set_i,
+    input logic [tile_size:0][WIDTH-1:0] set_i,
 
     output logic mode,
     output logic [parallel_size-1:0][WIDTH-1:0] scale,
@@ -79,7 +79,7 @@ module pipe_stage6 #(
   logic [parallel_size-1:0][WIDTH-1:0] mul1_o;
 
   logic [parallel_size-1:0][tile_size:0][WIDTH-1:0] reduction_i;
-  logic [parallel_size-1:0][tile_size:0][WIDTH-1:0] reduction_o;
+  logic [tile_size:0][WIDTH-1:0] reduction_o;
   
   assign acc_o=reduction_o;
 
@@ -116,7 +116,7 @@ module pipe_stage6 #(
     );
 
     fp16_add add3 (  //use for reduction
-        .operands_i({reduction_o[i][tile_size], operand3_i[i]}),  // 2 operands
+        .operands_i({reduction_o[tile_size], operand3_i[i]}),  // 2 operands
         .is_boxed_i(2'b11),  // 2 operands
         .rnd_mode_i(),
         // Output signals
@@ -136,15 +136,16 @@ module pipe_stage6 #(
     assign reduction_i[i] = {operandv_i[i], add3_o[i]};
     assign scale[i]=add2_o;
     
+    end
+    
       reduction reduct (
       .CLK_i(clk_i),
       .RST_i(step==stage_boundary[1]|step==stage_boundary[4]|step==stage_boundary[5]|step==stage_boundary[6]),
       .set_reg_i(set_i),
-      .operand_i(reduction_i[i]),
-      .reduction_o(reduction_o[i])
+      .operand_i(reduction_i),
+      .reduction_o(reduction_o)
   );
 
-  end
 
 
 

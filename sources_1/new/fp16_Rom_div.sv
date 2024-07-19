@@ -21,8 +21,7 @@
 `include "registers.svh"
 
 module fp16_Rom_div #(
-    localparam fpnew_pkg::fp_format_e   FpFormat    = fpnew_pkg::fp_format_e'(3),
-    localparam int unsigned WIDTH = fpnew_pkg::fp_width(FpFormat)
+    localparam int unsigned WIDTH = 16
 )
 (
     //input logic mode, //0 div  1 muladd
@@ -44,7 +43,7 @@ logic [10:0] C;
 logic [4:0] man_case;
 assign man_case=mantissa[9:5];
 always_comb begin
-    unique case (man_case) //需要反转
+    unique case (man_case) //�?要反�?
         5'd31: C=11'b100000;
         5'd30: C=11'b1100011;
         5'd29: C=11'b10101001;

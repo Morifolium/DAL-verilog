@@ -34,7 +34,7 @@ module pipe_stage5 #(
     input logic [parallel_size-1:0][WIDTH-1:0] acc_s,
     input logic [parallel_size-1:0][interval_size-1:0][para-1:0] interval_cnt_i,
     input logic [parallel_size-1:0][interval_size-1:0] mode_i,
-    output logic [interval_size-1:0] mode_o,
+    output logic [parallel_size-1:0][interval_size-1:0] mode_o,
     output logic [parallel_size-1:0][interval_size-1:0][para-1:0] interval_cnt_o,
 
     input  logic [parallel_size-1:0][para-1:0] max_cnt_i,
@@ -44,7 +44,7 @@ module pipe_stage5 #(
     output logic [parallel_size-1:0][WIDTH-1:0] _alpha_o,
     output logic [parallel_size-1:0][WIDTH-1:0] beta_o,
 
-    output logic [interval_size-1:0] acc_interval_o,
+    output logic [parallel_size-1:0][interval_size-1:0] acc_interval_o,
 
     input logic [parallel_size-1:0][WIDTH-1:0] a_acc_i,
     input logic [parallel_size-1:0][WIDTH-1:0] a_pos_i,
@@ -72,7 +72,7 @@ module pipe_stage5 #(
         .interval_o(acc_interval)
     );
 
-    assign acc_interval_o = acc_interval;
+    assign acc_interval_o[i] = acc_interval;
 
     logic [para-1:0] current_cnt;
 
@@ -122,7 +122,7 @@ module pipe_stage5 #(
     );
 
     fp16_mul mul1 (
-        .operands_i({16'b0,alpha_t, acc_s}),  // 2 operands
+        .operands_i({alpha_t, acc_s[i]}),  // 2 operands
         .is_boxed_i(2'b11),  // 2 operands
         //.rnd_mode_i
         // Output signals
@@ -131,9 +131,9 @@ module pipe_stage5 #(
     );
 
 
-    assign alpha_o[i] = acc_interval == mode_i ? 0 : alpha_t;
-    assign _alpha_o[i] = acc_interval == mode_i ? 0 : _alpha_t;
-    assign beta_o[i] = acc_interval == mode_i ? 0 : beta_t;
+    assign alpha_o[i] =  alpha_t;
+    assign _alpha_o[i] =  _alpha_t;
+    assign beta_o[i] =  beta_t;
     assign U_add[i] = current_cnt > max_cnt_i[i];
 
     always_comb begin

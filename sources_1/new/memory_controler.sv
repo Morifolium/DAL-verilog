@@ -87,10 +87,10 @@ module memory_controler #(
     assign sram2_o = HBM_o[i][1];
     assign sram3_o = HBM_o[i][2];
     assign sram4_o = HBM_o[i][3];
-    assign sram5_o = HBM_o[i][5];
-    assign sram6_o = HBM_o[i][6];
-    assign sram7_o = HBM_o[i][7];
-    assign sram8_o = HBM_o[i][8];
+    assign sram5_o = HBM_o[i][4];
+    assign sram6_o = HBM_o[i][5];
+    assign sram7_o = HBM_o[i][6];
+    assign sram8_o = HBM_o[i][7];
 
 
 
@@ -120,8 +120,8 @@ module memory_controler #(
     pipe_stage3 u_pipe_stage3 (
         .interval_lb   (rom_o[0]),
         .interval_ub   (rom_o[1]),
-        .mode          (sram8_o[21:10]),  //from SRAM7
-        .interval_cnt_i(sram8_o[43:21]),  //from SRAM7
+        .mode          (sram8_o[15:10]),  //from SRAM7
+        .interval_cnt_i(sram8_o[32:21]),  //from SRAM7
         .max_score     (sram8_o[44]),     //from SRAM7
         .s_i           (sram8_o[56:45]),  //from SRAM7
 
@@ -133,21 +133,21 @@ module memory_controler #(
         .CLK_i         (CLK_i),
         .RST_i         (RST_i),
         .acc_s         ({VPE_s_o[i][2], VPE_s_o[i][3]}),  //to interval
-        .interval_cnt_i(sram8_o[63:57]),                  //from SRAM7
-        .mode_i        ({sram8_o[65:64]}),                // need to fix
+        .interval_cnt_i({sram8_o[85:77],sram8_o[63:57]}),                  //from SRAM7
+        .mode_i        ({sram8_o[64]}),                // need to fix
         .max_cnt_i     (sram8_o[67:66]),
         .a_acc_i       ({sram3_o[0], sram4_o[0]}),        // from SRAM2/3
         .a_pos_i       ({sram3_o[1], sram4_o[1]}),        // from SRAM2/3
         .b_acc_i       ({sram3_o[2], sram4_o[2]}),        // from SRAM2/3
         .b_pos_i       ({sram3_o[3], sram4_o[3]}),        // from SRAM2/3
         .J_size        (sram8_o[68]),
-        .mode_o        ({sram8_i[65:64]}),
-        .interval_cnt_o(sram8_i[63:57]),
-        .max_cnt_o     (sram8_i[65:54]),
+        .mode_o        ({sram8_i[73]}),
+        .interval_cnt_o(sram8_i[72:57]),
+        .max_cnt_o     (sram8_i[55:54]),
         .alpha_o       ({sram5_i[4], sram6_i[4]}),        // to SRAM4/5/6
         ._alpha_o      ({sram5_i[5], sram6_i[5]}),        // to SRAM4/5/6
         .beta_o        ({sram5_i[6], sram6_i[6]}),        // to SRAM4/5/6
-        .acc_interval_o({sram5_i[7], sram6_i[7]}),        // to SRAM4/5/6
+        .acc_interval_o(sram5_i[7]),        // to SRAM4/5/6
         .U_add         (),                                // to SRAM4/5/6
         .finished      (finish_o[2]),
         .mode          (mode_o[2])
@@ -159,7 +159,7 @@ module memory_controler #(
 
 
     logic [2:0][WIDTH-1:0] scale_wire;
-    logic [parallel_size-1:0][tile_size-1:0][WIDTH-1:0] acc_o;
+    logic [2:0][tile_size-1:0][WIDTH-1:0] acc_o;
     pipe_stage6 u_pipe_stage6 (
         .clk_i         (CLK_i),
         .rst_i         (RST_i),
@@ -169,7 +169,7 @@ module memory_controler #(
         .operand3_i    (sram8_o[73:71]),
         .operand4_i    (sram8_o[76:74]),
         .stage_boundary(),
-        .set_i         (0),
+        .set_i         (2064'b0),
         .scale         (scale_wire),
         .finished      (finish_o[3]),
         .mode          (mode_o[3]),

@@ -45,7 +45,7 @@ module fp16_mul #(
   // The lower 2p+3 bits of the internal FMA result will be needed for leading-zero detection
   localparam int unsigned LOWER_SUM_WIDTH = 2 * PRECISION_BITS + 3;
   //localparam int unsigned LZC_RESULT_WIDTH = $clog2(LOWER_SUM_WIDTH);
-  localparam int unsigned LZC_RESULT_WIDTH = 5;
+  localparam int unsigned LZC_RESULT_WIDTH = 6;
   // Internal exponent width of FMA must accomodate all meaningful exponent values in order to avoid
   // datapath leakage. This is either given by the exponent bits or the width of the LZC result.
   // In most reasonable FP formats the internal exponent will be wider than the LZC result.

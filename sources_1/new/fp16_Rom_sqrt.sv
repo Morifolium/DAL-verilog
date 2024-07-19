@@ -77,7 +77,7 @@ logic [9:0] mantissa_o;
 
 
 always_comb begin
-if(mantissa_o[23]==1'b1) mantissa_o=mantissa_out[22:13];
+if(mantissa_out[23]==1'b1) mantissa_o=mantissa_out[22:13];
 else mantissa_o=mantissa_out[21:12];
 end
 

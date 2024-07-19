@@ -84,10 +84,10 @@ module reconf_tile #(
     assign addsrc2[i] = {muldst[i+1]};
   end
   
-  for (genvar i = 4; i <= (tile_size); i = i * 2) begin
-    for (genvar j = i / 2 - 1; j < tile_size; j += i) begin
-      assign addsrc1[i] = {adddst[j-i/2]};
-      assign addsrc2[i] = {adddst[j+i/2]};
+  for (genvar i = 2; i <= (tile_size); i = i * 2) begin
+    for (genvar j = i  - 1; j < tile_size-1; j += 2*i) begin
+      assign addsrc1[j] = {adddst[j-i/2]};
+      assign addsrc2[j] = {adddst[j+i/2]};
     end
   end
 
