@@ -107,7 +107,7 @@ module pipe_stage2 #(
 
     logic [WIDTH-1:0] cmp1_i;
     logic [WIDTH-1:0] cmp2_i;
-    logic  cmp_o;
+    logic cmp_o;
 
 
     // div_i
@@ -116,7 +116,7 @@ module pipe_stage2 #(
       else div_i = scale_i[i];
     end
 
-    //sram 6个bank 两个向量的位�?
+    //sram 6个bank 两个向量的位�?
     //operand_o
     always_comb begin
       if (stage == 5) operand1_o[i] = sqrt_o;
@@ -126,6 +126,7 @@ module pipe_stage2 #(
       end else if (stage == 4) operand1_o[i] = sqrt_o;
       else operand1_o[i] = div_mul_o;
     end
+
     assign operand2_o[i] = dnorm;
 
 
@@ -170,6 +171,9 @@ module pipe_stage2 #(
       end else if (stage == 6) begin
         cmp1_i = float98;
         cmp2_i = div_mul_o;
+      end else begin
+        cmp1_i = 0;
+        cmp2_i = 0;
       end
     end
 
