@@ -33,9 +33,10 @@ module interval#(
 logic [num-2:0][WIDTH-1:0] boundary;
 logic [num:0] result;
 
-assign boundary=0;
+assign boundary=112'b0;
 
 assign result[0]=1;
+assign result[8]=0;
 
 for(genvar i=0;i<num-1;i++)begin
     fpnew_noncomp  cmp(

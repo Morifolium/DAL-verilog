@@ -36,6 +36,7 @@ module simtest ();
   logic operand2;
   logic mode;  //reconfigtile mode
   logic [100:0][15:0] op;
+  logic [100:0][15:0]new_op;
 
   /*
     pipe_stage2 p2
@@ -69,42 +70,40 @@ module simtest ();
 );
 */
 
-  /*
-pipe_stage5 pip5
-(
-.CLK_i(op[0]),
-.RST_i(op[1]),
-.acc_s(op[2]),
-.interval_cnt_i(op[3]),
-.mode_i(op[4]),
-.mode_o(op[5]),
-.interval_cnt_o(op[6]),
 
-.max_cnt_i(op[7]),
-.max_cnt_o(op[8]),
+  pipe_stage5 pip5 (
+      .CLK_i(op[0]),
+      .RST_i(op[1]),
+      .acc_s(32'b0),
+      .interval_cnt_i(256'b0),
+      .mode_i(op[4]),
+      .mode_o(op[5]),
+      .interval_cnt_o(op[6]),
 
-.alpha_o(op[9]),
-._alpha_o(op[10]),
-.beta_o(op[11]),
+      .max_cnt_i(op[7]),
+      .max_cnt_o(op[8]),
 
-.acc_interval_o(op[12]), 
+      .alpha_o (op[9]),
+      ._alpha_o(op[10]),
+      .beta_o  (op[11]),
 
-.a_acc_i(op[13]),
-.a_pos_i(op[14]),
-.b_acc_i(op[15]),
-.b_pos_i(op[16]),
-.U_add(op[17]),
+      .acc_interval_o(new_op[15:0]),
+
+      .a_acc_i(op[13]),
+      .a_pos_i(op[14]),
+      .b_acc_i(op[15]),
+      .b_pos_i(op[16]),
+      .U_add  (op[17]),
 
 
-.J_size(op[18]),
-.finished(op[19]),
+      .J_size  (op[18]),
+      .finished(op[19]),
 
-.mode(op[20])
-    //VPE always 1
+      .mode(op[20])
+      //VPE always 1
+  );
 
-    );
-
-*/
+  //*/
   /*
 pipe_stage6 ppe6
 (
@@ -122,7 +121,7 @@ pipe_stage6 ppe6
 .acc_o(op[11])
 );
 */
-
+  /*
   memory_controler u_memory_controler (
       .CLK_i(),
       .RST_i(),
@@ -131,7 +130,7 @@ pipe_stage6 ppe6
       .HBM_o()
   );
 
-
+*/
 
 
   initial begin
