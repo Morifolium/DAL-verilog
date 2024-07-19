@@ -83,14 +83,11 @@ module memory_controler #(
     assign sram3_i = HBM_i[i][2];
     assign sram4_i = HBM_i[i][3];
 
-    assign sram1_o = HBM_o[i][0];
-    assign sram2_o = HBM_o[i][1];
-    assign sram3_o = HBM_o[i][2];
-    assign sram4_o = HBM_o[i][3];
-    assign sram5_o = HBM_o[i][4];
-    assign sram6_o = HBM_o[i][5];
-    assign sram7_o = HBM_o[i][6];
-    assign sram8_o = HBM_o[i][7];
+
+    assign HBM_o[i][0] =sram1_o ;
+    assign  HBM_o[i][1]=sram2_o;
+    assign  HBM_o[i][2]=sram3_o;
+    assign  HBM_o[i][3]=sram4_o;
 
 
 
