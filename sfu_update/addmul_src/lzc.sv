@@ -22,6 +22,8 @@
 ///   in_i = 000_1000, empty_o = 0, cnt_o = 3 (mode = 0)
 /// Furthermore, this unit contains a more efficient implementation for Verilator (simulation only).
 /// This speeds up simulation significantly.
+'include "cf_math_pkg.sv"
+
 module lzc #(
   /// The width of the input vector.
   parameter int unsigned WIDTH = 2,
@@ -30,7 +32,8 @@ module lzc #(
   /// Dependent parameter. Do **not** change!
   ///
   /// Width of the output signal with the zero count.
-  parameter int unsigned CNT_WIDTH = cf_math_pkg::idx_width(WIDTH)
+  //parameter int unsigned CNT_WIDTH = cf_math_pkg::idx_width(WIDTH)
+  parameter int unsigned CNT_WIDTH =6
 ) (
   /// Input vector to be counted.
   input  logic [WIDTH-1:0]     in_i,
@@ -47,7 +50,8 @@ module lzc #(
 
   end else begin : gen_lzc
 
-    localparam int unsigned NumLevels = $clog2(WIDTH);
+    //localparam int unsigned NumLevels = $clog2(WIDTH);
+    localparam int unsigned NumLevels = 6;
 
     // pragma translate_off
     initial begin
@@ -104,7 +108,7 @@ module lzc #(
       end
     end
 
-    assign cnt_o = NumLevels > unsigned'(0) ? index_nodes[0] : {($clog2(WIDTH)) {1'b0}};
+    assign cnt_o = NumLevels > unsigned'(0) ? index_nodes[0] : {(8'h6) {1'b0}};
     assign empty_o = NumLevels > unsigned'(0) ? ~sel_nodes[0] : ~(|in_i);
 
   end : gen_lzc

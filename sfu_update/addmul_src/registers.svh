@@ -28,7 +28,7 @@
 // `FFLSRN:  load-enable and synchronous active-low reset
 // `FFLNR:   load-enable without reset
 
-
+'include "fpnew_pkg.sv"
 // Flip-Flop with asynchronous active-low reset (implicit clock and reset)
 // __q: Q output of FF
 // __d: D input of FF

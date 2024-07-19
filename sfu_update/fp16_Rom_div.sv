@@ -21,8 +21,7 @@
 `include "./addmul_src/registers.svh"
 
 module fp16_Rom_div #(
-    localparam fpnew_pkg::fp_format_e   FpFormat    = fpnew_pkg::fp_format_e'(3),
-    localparam int unsigned WIDTH = fpnew_pkg::fp_width(FpFormat)
+    localparam int unsigned WIDTH = 16
 )
 (
     //input logic mode, //0 div  1 muladd

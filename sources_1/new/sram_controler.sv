@@ -32,7 +32,6 @@ module sram_controler #(
     output logic [BITWIDTH-1:0][WIDTH-1:0] SRAM_o
 );
 
-assign SRAM_o=SRAM_i;
 
 
 endmodule

@@ -34,7 +34,8 @@ package fpnew_pkg;
   } fp_encoding_t;
 
   localparam int unsigned NUM_FP_FORMATS = 5; // change me to add formats
-  localparam int unsigned FP_FORMAT_BITS = $clog2(NUM_FP_FORMATS);
+  //localparam int unsigned FP_FORMAT_BITS = $clog2(NUM_FP_FORMATS);
+  localparam int unsigned FP_FORMAT_BITS = 3;
 
   // FP formats
   typedef enum logic [FP_FORMAT_BITS-1:0] {
@@ -73,7 +74,8 @@ package fpnew_pkg;
   // *NOTE:* Add new formats only at the end of the enumeration for backwards compatibilty!
 
   localparam int unsigned NUM_INT_FORMATS = 4; // change me to add formats
-  localparam int unsigned INT_FORMAT_BITS = $clog2(NUM_INT_FORMATS);
+  //localparam int unsigned INT_FORMAT_BITS = $clog2(NUM_INT_FORMATS);
+  localparam int unsigned INT_FORMAT_BITS = 4;
 
   // Int formats
   typedef enum logic [INT_FORMAT_BITS-1:0] {
