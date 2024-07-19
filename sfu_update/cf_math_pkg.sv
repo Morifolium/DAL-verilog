@@ -55,7 +55,8 @@ package cf_math_pkg;
     /// As typedef:
     ///   `typedef logic [cf_math_pkg::idx_width(NumIdx)-1:0] idx_t`
     function automatic integer unsigned idx_width (input integer unsigned num_idx);
-        return (num_idx > 32'd1) ? unsigned'($clog2(num_idx)) : 32'd1;
+        //return (num_idx > 32'd1) ? unsigned'($clog2(num_idx)) : 32'd1;
+        return (num_idx > 32'd1) ? unsigned'(32'd6) : 32'd1;
     endfunction
 
 endpackage

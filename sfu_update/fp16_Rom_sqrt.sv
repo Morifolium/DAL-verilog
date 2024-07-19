@@ -18,7 +18,7 @@
 // Additional Comments:
 // 
 //////////////////////////////////////////////////////////////////////////////////
-`include "./addmul_src/registers.svh"
+`include "registers.svh"
 
 module fp16_Rom_sqrt#(
     

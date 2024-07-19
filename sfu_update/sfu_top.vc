@@ -9,10 +9,10 @@
 ./ln_equation.sv
 ./ln_variance.sv
 ./multiplier.sv
-./addmul_src/cf_math_pkg.sv
-./addmul_src/fpnew_classifier.sv
-./addmul_src/fpnew_fma.sv
-./addmul_src/fpnew_pkg.sv
-./addmul_src/fpnew_rounding.sv
-./addmul_src/lzc.sv
-./addmul_src/registers.svh
+./cf_math_pkg.sv
+./fpnew_classifier.sv
+./fpnew_fma.sv
+./fpnew_pkg.sv
+./fpnew_rounding.sv
+./lzc.sv
+./registers.svh
