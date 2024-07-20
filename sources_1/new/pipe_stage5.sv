@@ -79,7 +79,7 @@ module pipe_stage5 #(
       logic [para-1:0] current_cnt;
 
       always_comb begin
-        unique case (acc_interval)
+        unique case (acc_interval)      //current增加寄存器
           8'b00000001: current_cnt = interval_cnt_i[i][0] + 1;
           8'b00000010: current_cnt = interval_cnt_i[i][1] + 1;
           8'b00000100: current_cnt = interval_cnt_i[i][2] + 1;

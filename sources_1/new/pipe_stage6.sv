@@ -24,7 +24,7 @@
 module pipe_stage6 #(
     localparam int unsigned WIDTH = 16,
     localparam parallel_size = 3,
-    localparam para = 16,
+    localparam para = 8,
     localparam tile_size = 128
 ) (
     input  logic clk_i,

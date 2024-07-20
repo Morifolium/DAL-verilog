@@ -23,7 +23,7 @@
 
 module pipe_stage2 #(
     localparam n = 4096,
-    localparam para = 16,
+    localparam para = 8,
     localparam int unsigned WIDTH = 16,
     localparam int parallel_size = 2
 
@@ -53,7 +53,7 @@ module pipe_stage2 #(
 
 
 
-
+  //maxscore 寄存器 max_norm normn
 
   logic [para-1:0] step;
   always_ff @(posedge CLK_i or posedge RST_i) begin
