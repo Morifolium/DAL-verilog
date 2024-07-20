@@ -227,7 +227,7 @@ module pipe_stage2 #(
     always_ff @(posedge CLK_i) begin : Reg3
       if (RST_i) norm_n_o <= 16'b0;
       else if (cmp_o) norm_n_o <= sqrt_o;
-      else norm_n <= norm_n;
+      else norm_n_o <= norm_n_o;
     end
 
     assign center_ids = cmp_o ? max_id : n;
