@@ -81,13 +81,8 @@ module pipe_stage2 #(
 
   //mode
   always_comb begin
-    unique case (stage)
-      0: mode = 1;
-      1: mode = 0;
-      2: mode = 1;
-      3: mode = 1;
-      default: mode = 1;
-    endcase
+    if(stage==1) mode=1'b0;
+    else mode=1'b1;
   end
 
   for (genvar i = 0; i < parallel_size; i++) begin
@@ -110,7 +105,7 @@ module pipe_stage2 #(
     logic [WIDTH-1:0] cmp1_i;
     logic [WIDTH-1:0] cmp2_i;
     logic cmp_o;
-    logic [WIDTH-1:0] norm_n_i;
+    //logic [WIDTH-1:0] norm_n_i;
     logic [WIDTH-1:0] norm_n_o;
 
 
@@ -192,6 +187,7 @@ module pipe_stage2 #(
 
     //FFAR(max_cos, max_cos, (RST_i?0:div_mul_o), CLK_i, cmp_o|RST_i); //max_cos
     //FFAR(max_id,max_id, pos, CLK_i, cmp_o); //max_id
+    /*
     FFReg Reg1 (
         .__q_o(max_cos),
         .__reset_value((RST_i ? 16'b0 : div_mul_o)),
@@ -214,6 +210,22 @@ module pipe_stage2 #(
         .__clk(CLK_i),
         .__arst_n(RST_i||sep==stage_boundary[3])
     );
+    */
+
+    always_ff @( posedge CLK_i  ) begin : Reg1
+      if(RST_i) max_cos<=16'b0;
+      else if(cmp_o) max_cos<=div_mul_o;
+    end
+
+    always_ff @( posedge CLK_i  ) begin : Reg2
+      if(RST_i) max_id<=16'b0;
+      else if(cmp_o) max_id<=pos[i];
+    end
+
+    always_ff @( posedge CLK_i  ) begin : Reg3
+      if(RST_i) norm_n_o<=16'b0;
+      else if(cmp_o) norm_n_o<=sqrt_o;
+    end
 
     assign center_ids = cmp_o ? max_id : n;
     assign dnorm = cmp_o ? div_mul_o : 1;

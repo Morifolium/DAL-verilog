@@ -61,7 +61,7 @@ module pipe_stage5 #(
 
 );
 
-  assign mode = 1;
+  assign mode = 1;//VPE always 1
 
 
   genvar i, j;

@@ -34,7 +34,10 @@ module pipe_stage3 #(
     input logic [WIDTH-1:0] max_score,
     input logic [parallel_size-1:0][WIDTH-1:0] s_i,
     output logic [parallel_size-1:0] out_of_mode_interval,
-    output logic [parallel_size-1:0][para-1:0] interval_cnt_o
+    output logic [parallel_size-1:0][para-1:0] interval_cnt_o,
+
+  input logic [parallel_size-1:0][para-1:0]idx_i,
+    output logic [parallel_size-1:0][para-1:0] J_o
     //output logic [parallel_size-1:)][]
 
 );
@@ -47,7 +50,7 @@ module pipe_stage3 #(
   logic [parallel_size-1:0] out_of_mode_interval_l;
   logic [parallel_size-1:0] out_of_mode_interval_r;
 
-  
+
 
 
   for (genvar i = 0; i < parallel_size; i++) begin
@@ -127,6 +130,12 @@ module pipe_stage3 #(
         .extension_bit_o(out_of_mode_interval_r[i])
     );
 
+    FFReg Reg1(
+        .__q_o(J_o[i]),
+        .__reset_value(idx_i[i]),
+        .__clk(CLK_i),
+        .__arst_n(out_of_mode_interval[i])
+    );
 
   end
 
