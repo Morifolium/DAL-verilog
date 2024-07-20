@@ -19,13 +19,12 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-`include "registers.svh"
-`include "fpnew_pkg.sv"
+
 
 module pipe_stage2 #(
     localparam n = 4096,
     localparam para = 8,
-    localparam int unsigned WIDTH = 16,
+    localparam int  WIDTH = 16,
     localparam int parallel_size = 2 
 
 ) (

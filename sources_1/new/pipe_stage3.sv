@@ -26,7 +26,8 @@ module pipe_stage3 #(
     localparam para=16,
     localparam parallel_size=12
 ) (
-
+    input CLK_i,
+    input RST_i,
     input logic [7:0][WIDTH-1:0] interval_lb,
     input logic [7:0][WIDTH-1:0] interval_ub,
     input logic [parallel_size-1:0][7:0] mode,
@@ -129,13 +130,18 @@ module pipe_stage3 #(
         //result_o(cmp_o),
         .extension_bit_o(out_of_mode_interval_r[i])
     );
-
+    /*
     FFReg Reg1(
         .__q_o(J_o[i]),
         .__reset_value(idx_i[i]),
         .__clk(CLK_i),
         .__arst_n(out_of_mode_interval[i])
     );
+    */
+    always_ff @( posedge CLK_i ) begin : Reg1
+      if(RST_i) J_o[i]<=8'b0;
+      else if(out_of_mode_interval[i]) J_o[i]<=idx_i[i];
+    end
 
   end
 

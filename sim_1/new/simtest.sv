@@ -38,7 +38,7 @@ module simtest ();
   logic [100:0][15:0] op;
   logic [100:0][15:0] new_op;
 
-  //*
+  /*
   pipe_stage2 p2 (
       .CLK_i(clk),
       .RST_i(rst),
@@ -55,18 +55,17 @@ module simtest ();
   );
   //*/
   /*
-    pipe_stage3 stage_3
-    (
-  .interval_lb(clk),
-  .interval_ub(rst),
-  .mode(stall),
-  .interval_cnt_i(boundary),
-  .max_score(operand_i),
-  .s_i(scale_i),
-  .out_of_mode_interval(norm_n),
-  .interval_cnt_o(mode)
-);
-*/
+  pipe_stage3 stage_3 (
+      .interval_lb(clk),
+      .interval_ub(rst),
+      .mode(stall),
+      .interval_cnt_i(boundary),
+      .max_score(operand_i),
+      .s_i(scale_i),
+      .out_of_mode_interval(norm_n),
+      .interval_cnt_o(mode)
+  );
+  //*/
 
 
   /*
@@ -131,14 +130,16 @@ pipe_stage6 ppe6
 
 */
 
+  new_fp_16_mul mul (
+      .operands_i({op[1], op[0]}),
+      .result_o(op[2])  //c=a*b
+  );
+
 
   initial begin
-    op[0] = 0;
-    op[1] = 0;
+    op[0] = 16'b0100000000000000;
+    op[1] = 16'b0100000000000000;
     #10 $finish;
   end
-
-
-
 
 endmodule
