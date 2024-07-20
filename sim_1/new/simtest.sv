@@ -36,26 +36,24 @@ module simtest ();
   logic operand2;
   logic mode;  //reconfigtile mode
   logic [100:0][15:0] op;
-  logic [100:0][15:0]new_op;
+  logic [100:0][15:0] new_op;
 
-  /*
-    pipe_stage2 p2
-    (
-    .CLK_i(clk),
-    .RST_i(rst),
-    .stall_i(stall),
-    .stage_boundary(boundary),
-    .operand_i(operand_i), 
-    .scale_i(scale_i), // scale or norm_pos
-    .norm_n(norm_n),
-    .pos(pos),
-    .finished(finished),
-    .stage(stage),
-    .operand1_o(operand1),
-    .operand2_o(operand2),
-    .mode(mode)    //reconfigtile mode
-    );
-    */
+  //*
+  pipe_stage2 p2 (
+      .CLK_i(clk),
+      .RST_i(rst),
+      .stall_i(stall),
+      .stage_boundary(boundary),
+      .operand_i(operand_i),
+      .scale_i(scale_i),  // scale or norm_pos
+      .pos(pos),
+      .finished(finished),
+      .stage(stage),
+      .operand1_o(operand1),
+      .operand2_o(operand2),
+      .mode(mode)  //reconfigtile mode
+  );
+  //*/
   /*
     pipe_stage3 stage_3
     (
@@ -71,6 +69,7 @@ module simtest ();
 */
 
 
+  /*
   pipe_stage5 pip5 (
       .CLK_i(op[0]),
       .RST_i(op[1]),
