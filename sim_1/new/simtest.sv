@@ -130,7 +130,7 @@ pipe_stage6 ppe6
 
 */
 
-  new_fp_16_mul mul (
+  new_fp_16_add mul (
       .operands_i({op[1], op[0]}),
       .result_o(op[2])  //c=a*b
   );
@@ -138,7 +138,7 @@ pipe_stage6 ppe6
 
   initial begin
     op[0] = 16'b0100000000000000;
-    op[1] = 16'b0100000000000000;
+    op[1] = 16'b0011110000000000;
     #10 $finish;
   end
 
