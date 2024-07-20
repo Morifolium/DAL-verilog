@@ -20,6 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 `include "registers.svh"
+`include "fpnew_pkg.sv"
 
 module pipe_stage2 #(
     localparam n = 4096,
@@ -36,7 +37,7 @@ module pipe_stage2 #(
 
     input logic [parallel_size-1:0][WIDTH-1:0] operand_i,
     input logic [parallel_size-1:0][WIDTH-1:0] scale_i,    // scale or norm_pos
-    input logic [parallel_size-1:0][WIDTH-1:0] norm_n,
+    //input logic [parallel_size-1:0][WIDTH-1:0] norm_n,
     input logic [parallel_size-1:0][WIDTH-1:0] pos,
 
 
@@ -56,6 +57,7 @@ module pipe_stage2 #(
 
 
   logic [para-1:0] step;
+
   always_ff @(posedge CLK_i or posedge RST_i) begin
     if (RST_i) begin
       step  <= 0;
@@ -108,6 +110,8 @@ module pipe_stage2 #(
     logic [WIDTH-1:0] cmp1_i;
     logic [WIDTH-1:0] cmp2_i;
     logic cmp_o;
+    logic [WIDTH-1:0] norm_n_i;
+    logic [WIDTH-1:0] norm_n_o;
 
 
     // div_i
@@ -116,7 +120,6 @@ module pipe_stage2 #(
       else div_i = scale_i[i];
     end
 
-    //sram 6个bank 两个向量的位�?
     //operand_o
     always_comb begin
       if (stage == 5) operand1_o[i] = sqrt_o;
@@ -132,7 +135,6 @@ module pipe_stage2 #(
 
 
 
-
     fp16_Rom_div div (
         .operands(div_i),
         .result  (div_o)
@@ -141,7 +143,7 @@ module pipe_stage2 #(
 
     fp16_mul mul (
         // Input signals
-        .operands_i({scale_i[i], norm_n[i]}),  // 2 operands
+        .operands_i({scale_i[i], norm_n_o}),  // 2 operands
         .is_boxed_i(2'b11),  // 2 operands
         //.rnd_mode_i,
         // Output signals
@@ -202,6 +204,15 @@ module pipe_stage2 #(
         .__reset_value(pos[i]),
         .__clk(CLK_i),
         .__arst_n(cmp_o)
+    );
+
+    assign norm_n_i=sqrt_o;
+
+    FFReg Reg3(
+        .__q_o(norm_n_o),
+        .__reset_value(RST_i ? 16'b0 :norm_n_i),
+        .__clk(CLK_i),
+        .__arst_n(RST_i||sep==stage_boundary[3])
     );
 
     assign center_ids = cmp_o ? max_id : n;

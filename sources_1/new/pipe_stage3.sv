@@ -35,6 +35,7 @@ module pipe_stage3 #(
     input logic [parallel_size-1:0][WIDTH-1:0] s_i,
     output logic [parallel_size-1:0] out_of_mode_interval,
     output logic [parallel_size-1:0][para-1:0] interval_cnt_o
+    //output logic [parallel_size-1:)][]
 
 );
 
@@ -46,10 +47,12 @@ module pipe_stage3 #(
   logic [parallel_size-1:0] out_of_mode_interval_l;
   logic [parallel_size-1:0] out_of_mode_interval_r;
 
+  
+
 
   for (genvar i = 0; i < parallel_size; i++) begin
 
-    always_comb begin  //lut 合并乘一�?
+    always_comb begin  //lut 
       unique case (mode[i])
         8'b1: begin
           mode_interval_lb[i] = interval_lb[0];

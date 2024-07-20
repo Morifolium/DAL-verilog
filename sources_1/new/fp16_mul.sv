@@ -89,6 +89,7 @@ module fp16_mul #(
   // Input processing
   // -----------------
   fpnew_pkg::fp_info_t [1:0] info_q;
+  
 
   // Classify input
   fpnew_classifier #(

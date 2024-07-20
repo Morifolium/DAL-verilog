@@ -15,14 +15,14 @@
 
 
 module fpnew_classifier #(
-  parameter fpnew_pkg::fp_format_e   FpFormat = fpnew_pkg::fp_format_e'(2),
-  parameter int unsigned             NumOperands = 1,
-  // Do not change
-  localparam int unsigned WIDTH = fpnew_pkg::fp_width(FpFormat)
+    parameter  fpnew_pkg::fp_format_e FpFormat    = fpnew_pkg::fp_format_e'(2),
+    parameter  int unsigned           NumOperands = 1,
+    // Do not change
+    localparam int unsigned           WIDTH       = fpnew_pkg::fp_width(FpFormat)
 ) (
-  input  logic                [NumOperands-1:0][WIDTH-1:0] operands_i,
-  input  logic                [NumOperands-1:0]            is_boxed_i,
-  output fpnew_pkg::fp_info_t [NumOperands-1:0]            info_o
+    input  logic                [NumOperands-1:0][WIDTH-1:0] operands_i,
+    input  logic                [NumOperands-1:0]            is_boxed_i,
+    output fpnew_pkg::fp_info_t [NumOperands-1:0]            info_o
 );
 
   localparam int unsigned EXP_BITS = fpnew_pkg::exp_bits(FpFormat);
@@ -38,7 +38,7 @@ module fpnew_classifier #(
   // Iterate through all operands
   for (genvar op = 0; op < int'(NumOperands); op++) begin : gen_num_values
 
-    fp_t value;
+    fp_t  value;
     logic is_boxed;
     logic is_normal;
     logic is_inf;
@@ -51,16 +51,23 @@ module fpnew_classifier #(
     // ---------------
     // Classify Input
     // ---------------
+    //only consider  normal/subnormal/zero
     always_comb begin : classify_input
-      value         = operands_i[op];
-      is_boxed      = is_boxed_i[op];
-      is_normal     = is_boxed && (value.exponent != '0) && (value.exponent != '1);
-      is_zero       = is_boxed && (value.exponent == '0) && (value.mantissa == '0);
-      is_subnormal  = is_boxed && (value.exponent == '0) && !is_zero;
-      is_inf        = is_boxed && ((value.exponent == '1) && (value.mantissa == '0));
-      is_nan        = !is_boxed || ((value.exponent == '1) && (value.mantissa != '0));
-      is_signalling = is_boxed && is_nan && (value.mantissa[MAN_BITS-1] == 1'b0);
-      is_quiet      = is_nan && !is_signalling;
+      value                    = operands_i[op];
+      //is_boxed      = is_boxed_i[op];
+      is_boxed                 = 1'b1;
+      is_normal                = is_boxed && (value.exponent != '0) && (value.exponent != '1);
+      is_zero                  = is_boxed && (value.exponent == '0) && (value.mantissa == '0);
+      is_subnormal             = is_boxed && (value.exponent == '0) && !is_zero;
+
+      //is_inf        = is_boxed && ((value.exponent == '1) && (value.mantissa == '0));
+      is_inf                   = 1'b0;
+      //is_nan        = !is_boxed || ((value.exponent == '1) && (value.mantissa != '0));
+      is_nan                   = 1'b0;
+      //is_signalling = is_boxed && is_nan && (value.mantissa[MAN_BITS-1] == 1'b0);
+      is_signalling            = 1'b0;
+      //is_quiet                 = is_nan && !is_signalling;
+      is_quiet                 = 1'b0;
       // Assign output for current input
       info_o[op].is_normal     = is_normal;
       info_o[op].is_subnormal  = is_subnormal;
@@ -71,5 +78,9 @@ module fpnew_classifier #(
       info_o[op].is_quiet      = is_quiet;
       info_o[op].is_boxed      = is_boxed;
     end
+
+
+
+
   end
 endmodule
