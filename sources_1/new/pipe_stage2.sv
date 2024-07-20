@@ -81,8 +81,8 @@ module pipe_stage2 #(
 
   //mode
   always_comb begin
-    if(stage==1) mode=1'b0;
-    else mode=1'b1;
+    if (stage == 1) mode = 1'b0;
+    else mode = 1'b1;
   end
 
   for (genvar i = 0; i < parallel_size; i++) begin
@@ -212,19 +212,22 @@ module pipe_stage2 #(
     );
     */
 
-    always_ff @( posedge CLK_i  ) begin : Reg1
-      if(RST_i) max_cos<=16'b0;
-      else if(cmp_o) max_cos<=div_mul_o;
+    always_ff @(posedge CLK_i) begin : Reg1
+      if (RST_i) max_cos <= 16'b0;
+      else if (cmp_o) max_cos <= div_mul_o;
+      else max_cos <= max_cos;
     end
 
-    always_ff @( posedge CLK_i  ) begin : Reg2
-      if(RST_i) max_id<=16'b0;
-      else if(cmp_o) max_id<=pos[i];
+    always_ff @(posedge CLK_i) begin : Reg2
+      if (RST_i) max_id <= 16'b0;
+      else if (cmp_o) max_id <= pos[i];
+      else max_id <= max_id;
     end
 
-    always_ff @( posedge CLK_i  ) begin : Reg3
-      if(RST_i) norm_n_o<=16'b0;
-      else if(cmp_o) norm_n_o<=sqrt_o;
+    always_ff @(posedge CLK_i) begin : Reg3
+      if (RST_i) norm_n_o <= 16'b0;
+      else if (cmp_o) norm_n_o <= sqrt_o;
+      else norm_n <= norm_n;
     end
 
     assign center_ids = cmp_o ? max_id : n;

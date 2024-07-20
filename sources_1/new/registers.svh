@@ -13,6 +13,7 @@
 `ifndef COMMON_CELLS_REGISTERS_SVH_
 `define COMMON_CELLS_REGISTERS_SVH_
 
+`include "fpnew_pkg.sv"
 // Abridged Summary of available FF macros:
 // `FF:      asynchronous active-low reset (implicit clock and reset)
 // `FFAR:    asynchronous active-high reset

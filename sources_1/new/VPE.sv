@@ -52,6 +52,8 @@ module VPE
     end
 endmodule
 
+// VPE+ vec1_改为寄存器  
+
 
 /*
 module reconf_tile #(
