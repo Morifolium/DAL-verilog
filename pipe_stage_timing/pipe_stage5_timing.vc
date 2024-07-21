@@ -1,0 +1,8 @@
+./pipe_stage5_timing.sv
+./pipe_stage5.sv
+./VPE.sv
+./new_fp16_add.sv
+./new_fp16_mul.sv
+./interval.sv
+./lzc.sv
+./reconf_tile.sv

@@ -20,9 +20,9 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module VPE #(
+module VPE_pipe_stage6 #(
     localparam parallel_size = 1,
-    localparam pipe_stage = 2,
+    localparam pipe_stage = 3,
     localparam tile_size = 128,
     localparam int mul_width = 16,
     localparam int add_width = 16

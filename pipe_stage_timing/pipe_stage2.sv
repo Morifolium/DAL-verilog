@@ -28,11 +28,9 @@ module pipe_stage2 #(
     localparam int parallel_size = 2
 
 ) (
-    input logic clk_i,
-    input logic rst_i,
-
+    input logic clk,
+    input logic rst,
     input logic [6:0][para-1:0] stage_boundary,
-
     input logic [parallel_size-1:0][WIDTH-1:0] operand_i,
     input logic [parallel_size-1:0][WIDTH-1:0] scale_i,    // scale or norm_pos
     //input logic [parallel_size-1:0][WIDTH-1:0] norm_n,
@@ -41,11 +39,8 @@ module pipe_stage2 #(
 
     output logic finished,
     output logic [2:0] stage,
-
     output logic [parallel_size-1:0][WIDTH-1:0] operand1_o,
     output logic [parallel_size-1:0][WIDTH-1:0] operand2_o,
-
-
     output logic mode  //reconfigtile mode
 
 );
@@ -58,8 +53,8 @@ module pipe_stage2 #(
 
 
 
-  always_ff @(posedge clk_i or posedge rst_i) begin
-    if (rst_i) step <= 0;
+  always_ff @(posedge clk or posedge rst) begin
+    if (rst) step <= 0;
     else step <= step + 1;
   end
 
@@ -171,20 +166,20 @@ module pipe_stage2 #(
     );
 
 
-    always_ff @(posedge clk_i) begin : Reg1
-      if (rst_i) max_cos <= 16'b0;
+    always_ff @(posedge clk) begin : Reg1
+      if (rst) max_cos <= 16'b0;
       else if (cmp_o) max_cos <= div_mul_o;
       else max_cos <= max_cos;
     end
 
-    always_ff @(posedge clk_i) begin : Reg2
-      if (rst_i) max_id <= 16'b0;
+    always_ff @(posedge clk) begin : Reg2
+      if (rst) max_id <= 16'b0;
       else if (cmp_o) max_id <= pos[i];
       else max_id <= max_id;
     end
 
-    always_ff @(posedge clk_i) begin : Reg3
-      if (rst_i) norm_n_o <= 16'b0;
+    always_ff @(posedge clk) begin : Reg3
+      if (rst) norm_n_o <= 16'b0;
       else if (cmp_o) norm_n_o <= sqrt_o;
       else norm_n_o <= norm_n_o;
     end

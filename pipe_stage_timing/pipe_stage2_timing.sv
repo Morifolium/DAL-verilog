@@ -29,8 +29,8 @@ module pipe_stage2_timing #(
     localparam tile_size = 128
 
 ) (
-    input logic clk_i,
-    input logic rst_i,
+    input logic clk,
+    input logic rst,
 
     input logic [6:0][para-1:0] stage_boundary,
 
@@ -52,10 +52,10 @@ module pipe_stage2_timing #(
 
 
   logic [parallel_size-1:0][WIDTH-1:0] Scal_wire;
-  logic  mode_wire;
+  logic mode_wire;
   pipe_stage2 U_pip2 (
-      .clk_i(clk_i),
-      .rst_i(rst_i),
+      .clk(clk),
+      .rst(rst),
       .stage_boundary(stage_boundary),
       .operand_i(Scal_wire),
       .scale_i(scale_i),  // scale or norm_pos
@@ -73,7 +73,7 @@ module pipe_stage2_timing #(
       .operand1_i(vec_i[0]),
       .operand2_i(vec_i[1]),
       .operand3_i(no_vec_i),
-      .mode({mode_wire,mode_wire}),
+      .mode({mode_wire, mode_wire}),
       .Vec_o(vec_o),
       .Scal_o(Scal_wire)
 

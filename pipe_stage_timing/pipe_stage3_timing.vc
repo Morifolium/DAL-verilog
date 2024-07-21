@@ -1,0 +1,4 @@
+./pipe_stage3_timing
+./lzc.sv
+./new_fp16_add
+./new_fp16_cmp

@@ -7,3 +7,4 @@
 ./VPE.sv
 ./reconf_tile.sv
 ./pipe_stage2.sv
+./lzc.sv

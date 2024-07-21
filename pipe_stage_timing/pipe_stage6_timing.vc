@@ -1,0 +1,8 @@
+./pipe_stage6_timing.sv
+./pipe_stage6.sv
+./VPE_pipe_stage6.sv
+./new_fp16_add.sv
+./new_fp16_mul.sv
+./lzc.sv
+./reconf_tile.sv
+./reduction.sv

@@ -87,7 +87,7 @@ module reconf_tile #(
   assign o_scal = adddst[63];
 
 
-  for (genvar i = 0; i < tile_size; i++) begin
+  for (genvar i = 0; i < tile_size-1; i++) begin
     new_fp16_add add (
         .operands_i({addsrc1[i], addsrc2[i]}),  // 2 operands
         .result_o  (adddst[i])

@@ -206,32 +206,6 @@ module pipe_stage2 #(
         .extension_bit_o(cmp_o)
     );
 
-    //FFAR(max_cos, max_cos, (RST_i?0:div_mul_o), CLK_i, cmp_o|RST_i); //max_cos
-    //FFAR(max_id,max_id, pos, CLK_i, cmp_o); //max_id
-    /*
-    FFReg Reg1 (
-        .__q_o(max_cos),
-        .__reset_value((RST_i ? 16'b0 : div_mul_o)),
-        .__clk(CLK_i),
-        .__arst_n(cmp_o | RST_i)
-    );
-
-    FFReg Reg2 (
-        .__q_o(max_id),
-        .__reset_value(pos[i]),
-        .__clk(CLK_i),
-        .__arst_n(cmp_o)
-    );
-
-    assign norm_n_i=sqrt_o;
-
-    FFReg Reg3(
-        .__q_o(norm_n_o),
-        .__reset_value(RST_i ? 16'b0 :norm_n_i),
-        .__clk(CLK_i),
-        .__arst_n(RST_i||sep==stage_boundary[3])
-    );
-    */
 
     always_ff @(posedge CLK_i) begin : Reg1
       if (RST_i) max_cos <= 16'b0;
