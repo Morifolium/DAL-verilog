@@ -20,9 +20,9 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module reconf_tile #(
-    localparam                        tile_size = 128,
-    localparam int                    mul_width = 16,
-    localparam int                    add_width = 16
+    localparam     tile_size = 128,
+    localparam int mul_width = 16,
+    localparam int add_width = 16
 
 
 
@@ -40,6 +40,7 @@ module reconf_tile #(
   logic [tile_size-1:0][mul_width-1:0] mulsrc2;
   logic [tile_size-1:0][mul_width-1:0] muldst;
 
+  assign mulsrc1 = vec1;
 
   for (genvar i = 0; i < tile_size; i++) begin
     always_comb begin
@@ -53,7 +54,7 @@ module reconf_tile #(
   for (genvar i = 0; i < tile_size; i++) begin
     new_fp16_mul mul (
         .operands_i({mulsrc1[i], mulsrc2[i]}),  // 2 operands
-        .result_o(muldst[i])
+        .result_o  (muldst[i])
     );
   end
 
@@ -76,9 +77,9 @@ module reconf_tile #(
     assign addsrc1[i] = {muldst[i]};
     assign addsrc2[i] = {muldst[i+1]};
   end
-  
+
   for (genvar i = 2; i <= (tile_size); i = i * 2) begin
-    for (genvar j = i  - 1; j < tile_size-1; j += 2*i) begin
+    for (genvar j = i - 1; j < tile_size - 1; j += 2 * i) begin
       assign addsrc1[j] = {adddst[j-i/2]};
       assign addsrc2[j] = {adddst[j+i/2]};
     end
@@ -87,7 +88,7 @@ module reconf_tile #(
   assign o_scal = adddst[63];
 
 
-  for (genvar i = 0; i < tile_size-1; i++) begin
+  for (genvar i = 0; i < tile_size - 1; i++) begin
     new_fp16_add add (
         .operands_i({addsrc1[i], addsrc2[i]}),  // 2 operands
         .result_o  (adddst[i])
