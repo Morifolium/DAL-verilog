@@ -40,8 +40,6 @@ module reconf_tile #(
   logic [tile_size-1:0][mul_width-1:0] mulsrc2;
   logic [tile_size-1:0][mul_width-1:0] muldst;
 
-  assign mulsrc1 = vec1;
-
   assign mulsrc1 =vec1;
   for (genvar i = 0; i < tile_size; i++) begin
     always_comb begin
