@@ -5,6 +5,7 @@ module new_fp16_add #(
     localparam EXP_BITS = 5,  //FP16 1-5-10
     localparam MAN_BITS = 10,
     localparam PRECISION_BITS = MAN_BITS + 1,
+    localparam ADD_PRECISION=PRECISION_BITS+1,
     localparam int unsigned BIAS = 15
 ) (
     input logic [1:0][WIDTH-1:0] operands_i,
@@ -62,8 +63,8 @@ module new_fp16_add #(
 
   logic [EXP_BITS:0] large_exp;
   logic [EXP_BITS:0] min_exp;
-  logic [2*PRECISION_BITS-1:0] large_man;
-  logic [2*PRECISION_BITS-1:0] min_man;
+  logic [ADD_PRECISION-1:0] large_man;
+  logic [ADD_PRECISION-1:0] min_man;
 
   always_comb begin
     if ((exponent_a > exponent_b) || (exponent_a == exponent_b && mantissa_a > mantissa_b)) begin
@@ -86,8 +87,8 @@ module new_fp16_add #(
 
   always_comb begin
     if (sign_a ^ sign_b)
-      mantissa = large_man << MAN_BITS - (min_man << MAN_BITS) >> (large_exp - min_exp);
-    else mantissa = (large_man << MAN_BITS) + ((min_man << MAN_BITS) >> (large_exp - min_exp));
+      mantissa = large_man  - (min_man ) >> (large_exp - min_exp);
+    else mantissa = (large_man ) + ((min_man ) >> (large_exp - min_exp));
   end
 
 
@@ -98,25 +99,25 @@ module new_fp16_add #(
   logic [5:0] left_shift;
   logic is_zero;
 
-  lzc #(
-      .WIDTH(2 * PRECISION_BITS),
+  add_lzc #(
+      .WIDTH(ADD_PRECISION),
       .MODE(1),
-      .CNT_WIDTH(6)
+      .CNT_WIDTH(4)
   ) u_lzc (
       .in_i(mantissa),
       .cnt_o(lzc_result),
       .empty_o(is_zero)
   );
 
-  logic [2*PRECISION_BITS-1:0] shift_result;
+  logic [ADD_PRECISION-1:0] shift_result;
   //assign shift_result = (mantissa >> left_shift);
-  assign mantissa_c = shift_result[20:11];
+  assign mantissa_c = shift_result[10:1];
   assign exponent   = large_exp - lzc_result+1;
 
   always_comb begin
     if (is_zero) begin
       exponent_c   = 5'b0;
-      shift_result = 22'b0;
+      shift_result = 12'b0;
       left_shift=0;
     end else if (signed'(exponent) > 0) begin
       left_shift   = lzc_result;
