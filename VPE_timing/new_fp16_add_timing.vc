@@ -1,0 +1,3 @@
+./new_fp16_add_timing.sv
+./new_fp16_add_nolzc.sv
+./add_lzc.sv
