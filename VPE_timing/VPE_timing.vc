@@ -1,0 +1,6 @@
+./VPE_timing.sv
+./reconf_tile.sv
+./new_fp16_add.sv
+./new_fp16_mul.sv
+./add_lzc.sv
+./lzc.sv

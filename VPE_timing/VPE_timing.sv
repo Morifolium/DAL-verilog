@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module VPE #(
+module VPE_timing #(
     localparam parallel_size = 1,
     localparam pipe_stage = 1,
     localparam tile_size = 128,
