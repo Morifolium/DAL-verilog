@@ -32,6 +32,7 @@ module pipe_stage5 #(
     input logic [parallel_size-1:0][WIDTH-1:0] acc_s,
     input logic [interval_size-1:0][para-1:0] interval_cnt_i,
     input logic [parallel_size-1:0][interval_size-1:0] mode_i,
+    input logic [6:0][WIDTH-1:0] boundary,
     output logic [parallel_size-1:0][interval_size-1:0] mode_o,
     output logic [interval_size-1:0][para-1:0] interval_cnt_o,
 
@@ -67,6 +68,7 @@ module pipe_stage5 #(
 
     interval check_int (
         .s_i(acc_s[i]),
+        .boundary(boundary),
         .interval_o(acc_interval)
     );
 

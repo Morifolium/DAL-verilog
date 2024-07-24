@@ -3,4 +3,4 @@
 ./new_fp16_add.sv
 ./new_fp16_mul.sv
 ./add_lzc.sv
-./lzc.sv
+

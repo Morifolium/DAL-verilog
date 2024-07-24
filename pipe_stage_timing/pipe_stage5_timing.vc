@@ -4,6 +4,5 @@
 ./new_fp16_add.sv
 ./new_fp16_mul.sv
 ./interval.sv
-./lzc.sv
 ./reconf_tile.sv
 ./add_lzc.sv

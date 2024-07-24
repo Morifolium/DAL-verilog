@@ -80,7 +80,7 @@ module reconf_tile #(
 
   for (genvar i = 2; i <= (tile_size); i = i * 2) begin  //128 64 / 32 16 8/ 4 2 1/
     for (genvar j = i - 1; j < tile_size - 1; j += 2 * i) begin
-      if (i == 2) begin
+      if (i == 4) begin
         reg [add_width-1:0] add_reg1;
         reg [add_width-1:0] add_reg2;
         always_ff @(posedge clk) begin
@@ -89,7 +89,7 @@ module reconf_tile #(
         end
         assign addsrc1[j] = add_reg1;
         assign addsrc2[j] = add_reg2;
-      end else if (i == 16) begin
+      end else if (i == 32) begin
         reg [add_width-1:0] add_reg1;
         reg [add_width-1:0] add_reg2;
         always_ff @(posedge clk) begin

@@ -33,8 +33,8 @@ module new_fp16_mul #(
   assign exponent_b = operands_i[0][14:10];
   assign mantissa_b = operands_i[0][9:0];
 
-  assign is_subnormal_a = exponent_a == 5'b0 && mantissa_a != 10'b0;
-  assign is_subnormal_b = exponent_b == 5'b0 && mantissa_b != 10'b0;
+  //assign is_subnormal_a = exponent_a == 5'b0 && mantissa_a != 10'b0;
+  //assign is_subnormal_b = exponent_b == 5'b0 && mantissa_b != 10'b0;
 
   assign is_zero_a = exponent_a == 5'b0 && mantissa_a == 10'b0;
   assign is_zero_b = exponent_b == 5'b0 && mantissa_b == 10'b0;
@@ -42,8 +42,8 @@ module new_fp16_mul #(
   logic [PRECISION_BITS-1:0] man_a;
   logic [PRECISION_BITS-1:0] man_b;
 
-  assign man_a = is_subnormal_a ? {1'b0, mantissa_a} : {1'b1, mantissa_a};
-  assign man_b = is_subnormal_b ? {1'b0, mantissa_b} : {1'b1, mantissa_b};
+  assign man_a = {1'b1, mantissa_a};
+  assign man_b = {1'b1, mantissa_b};
 
   always_comb begin
     if (is_zero_a || is_zero_b) result_o = 16'b0;
@@ -55,34 +55,21 @@ module new_fp16_mul #(
   logic [2*PRECISION_BITS-1:0] mantissa;
   assign mantissa = man_a * man_b;
 
-  logic [5:0] lzc_result;
-  logic [5:0] left_shift;
-
-  lzc #(
-      .WIDTH(15),
-      .MODE(1),
-      .CNT_WIDTH(4)
-  ) u_lzc (
-      .in_i(mantissa[21:7]),
-      .cnt_o(lzc_result),
-      .empty_o()
-  );
-
-  logic [2*PRECISION_BITS-1:0] shift_result;
-  //assign shift_result = (mantissa >> left_shift);
-  assign mantissa_c = shift_result[20:11];
-  assign exponent = signed'({1'b0, exponent_a}) +signed'({1'b0, exponent_b})  - BIAS + 1 - lzc_result;
+  logic lzc_result;
 
   always_comb begin
-    if (signed'(exponent) > 0) begin
-      left_shift = lzc_result;
-      shift_result=mantissa<<(lzc_result);
-      exponent_c = exponent[4:0];
+    if (mantissa[21] == 1'b0) begin
+      lzc_result = 1'b1;
+      mantissa_c = mantissa[19:10];
     end else begin
-        exponent_c=5'b0;
-      left_shift = -signed'(exponent);
-      shift_result=(mantissa<<lzc_result)>>left_shift;
+      lzc_result = 1'b0;
+      mantissa_c = mantissa[19:10];
     end
   end
+
+
+  //assign shift_result = (mantissa >> left_shift);
+  assign exponent = signed'({1'b0, exponent_a}) +signed'({1'b0, exponent_b})  - BIAS + 1 - lzc_result;
+  assign exponent_c = exponent[4:0];
 
 endmodule

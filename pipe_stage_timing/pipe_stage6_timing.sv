@@ -49,7 +49,7 @@ module pipe_stage6_timing #(
   VPE_pipe_stage6 u_VPE_pipe_stage6 (
       .operand1_i(operandv1_i),
       .operand2_i(operandv2_i),
-      .operand3_i(scal),
+      .operand3_i(scale),
       .mode      ({mode, mode, mode}),
 
       .Vec_o (operandv_i),

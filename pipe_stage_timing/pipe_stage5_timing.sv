@@ -19,22 +19,23 @@ module pipe_stage5_timing #(
     input logic [parallel_size-1:0][        WIDTH-1:0] b_acc_i,
     input logic [parallel_size-1:0][        WIDTH-1:0] b_pos_i,
     input logic [         para-1:0]                    J_size,
+    input logic [              6:0][        WIDTH-1:0] boundary,
 
-    output logic [parallel_size-1:0][interval_size-1:0]           mode_o,
-    output logic [interval_size-1:0][         para-1:0]           interval_cnt_o,
-    output logic [parallel_size-1:0][         para-1:0]           max_cnt_o,
-    output logic [parallel_size-1:0][        WIDTH-1:0]           alpha_o,
-    output logic [parallel_size-1:0][        WIDTH-1:0]           _alpha_o,
-    output logic [parallel_size-1:0][        WIDTH-1:0]           beta_o,
-    output logic [parallel_size-1:0][interval_size-1:0][para-1:0] acc_interval_o,
-    output logic [parallel_size-1:0]                              U_add,
-    output logic                                                  finished,
-    output logic [parallel_size-1:0][tile_size-1:0][WIDTH-1:0] K_o
+    output logic [parallel_size-1:0][interval_size-1:0]            mode_o,
+    output logic [interval_size-1:0][         para-1:0]            interval_cnt_o,
+    output logic [parallel_size-1:0][         para-1:0]            max_cnt_o,
+    output logic [parallel_size-1:0][        WIDTH-1:0]            alpha_o,
+    output logic [parallel_size-1:0][        WIDTH-1:0]            _alpha_o,
+    output logic [parallel_size-1:0][        WIDTH-1:0]            beta_o,
+    output logic [parallel_size-1:0][interval_size-1:0][ para-1:0] acc_interval_o,
+    output logic [parallel_size-1:0]                               U_add,
+    output logic                                                   finished,
+    output logic [parallel_size-1:0][    tile_size-1:0][WIDTH-1:0] K_o,
+    input  logic                                                   mode
 
 );
 
   wire [parallel_size-1:0][WIDTH-1:0] acc_s;
-  wire mode;
 
   pipe_stage5 u_pipe_stage5 (
       .clk           (clk),
@@ -48,6 +49,7 @@ module pipe_stage5_timing #(
       .b_acc_i       (b_acc_i),
       .b_pos_i       (b_pos_i),
       .J_size        (J_size),
+      .boundary      (boundary),
 
       .mode_o        (mode_o),
       .interval_cnt_o(interval_cnt_o),
@@ -58,7 +60,7 @@ module pipe_stage5_timing #(
       .acc_interval_o(acc_interval_o),
       .U_add         (U_add),
       .finished      (finished),
-      .mode          (mode)
+      .mode          ()
 
   );
 
