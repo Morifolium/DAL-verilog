@@ -2,11 +2,14 @@ module pipe_stage5_timing #(
     localparam int unsigned WIDTH = 16,
     localparam interval_size = 8,
     localparam para = 8,
-    localparam parallel_size = 2
+    localparam parallel_size = 2,
+    localparam tile_size = 128
 ) (
     input logic clk,
     input logic rst,
-    input logic [1:0][parallel_size-1:0][WIDTH-1:0] QK,
+    input logic [parallel_size-1:0][tile_size-1:0][WIDTH-1:0] Q,
+    input logic [parallel_size-1:0][tile_size-1:0][WIDTH-1:0] K,
+    input logic [parallel_size-1:0][WIDTH-1:0] V,
 
     input logic [interval_size-1:0][         para-1:0] interval_cnt_i,
     input logic [parallel_size-1:0][interval_size-1:0] mode_i,
@@ -25,7 +28,8 @@ module pipe_stage5_timing #(
     output logic [parallel_size-1:0][        WIDTH-1:0]           beta_o,
     output logic [parallel_size-1:0][interval_size-1:0][para-1:0] acc_interval_o,
     output logic [parallel_size-1:0]                              U_add,
-    output logic                                                  finished
+    output logic                                                  finished,
+    output logic [parallel_size-1:0][tile_size-1:0][WIDTH-1:0] K_o
 
 );
 
@@ -57,14 +61,14 @@ module pipe_stage5_timing #(
       .mode          (mode)
 
   );
-  
+
   VPE u_VPE (
-      .operand1_i(QK[1]),
-      .operand2_i(QK[0]),
-      .operand3_i(),
+      .operand1_i(Q),
+      .operand2_i(K),
+      .operand3_i(V),
       .mode      ({mode, mode}),
 
-      .Vec_o (),
+      .Vec_o (K_o),
       .Scal_o(acc_s)
   );
 

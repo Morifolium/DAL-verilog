@@ -8,3 +8,4 @@
 ./reconf_tile.sv
 ./pipe_stage2.sv
 ./lzc.sv
+./add_lzc.sv

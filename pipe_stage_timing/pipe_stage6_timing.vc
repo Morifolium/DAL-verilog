@@ -6,3 +6,4 @@
 ./lzc.sv
 ./reconf_tile.sv
 ./reduction.sv
+./add_lzc.sv

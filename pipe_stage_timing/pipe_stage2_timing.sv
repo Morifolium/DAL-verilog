@@ -41,7 +41,7 @@ module pipe_stage2_timing #(
 
 
     output logic finished,
-    output logic [2:0] stage,
+    input logic [2:0] stage,
 
     output logic [parallel_size-1:0][WIDTH-1:0] operand1_o,
     output logic [parallel_size-1:0][WIDTH-1:0] operand2_o,

@@ -59,11 +59,11 @@ module new_fp16_mul #(
   logic [5:0] left_shift;
 
   lzc #(
-      .WIDTH(2*PRECISION_BITS),
+      .WIDTH(15),
       .MODE(1),
-      .CNT_WIDTH(6)
+      .CNT_WIDTH(4)
   ) u_lzc (
-      .in_i(mantissa),
+      .in_i(mantissa[21:7]),
       .cnt_o(lzc_result),
       .empty_o()
   );

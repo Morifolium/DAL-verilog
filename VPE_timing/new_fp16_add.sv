@@ -1,6 +1,6 @@
 
 
-module new_fp16_add_nolzc #(
+module new_fp16_add #(
     localparam WIDTH = 16,
     localparam EXP_BITS = 5,  //FP16 1-5-10
     localparam MAN_BITS = 10,
@@ -12,8 +12,8 @@ module new_fp16_add_nolzc #(
     output logic [WIDTH-1:0] result_o  //c=a*b
 );
 
-  logic is_subnormal_a;
-  logic is_subnormal_b;
+  //logic is_subnormal_a;
+  //logic is_subnormal_b;
   logic sign_a;
   logic sign_b;
   logic sign_c;
@@ -33,8 +33,8 @@ module new_fp16_add_nolzc #(
   assign exponent_b = operands_i[0][14:10];
   assign mantissa_b = operands_i[0][9:0];
 
-  assign is_subnormal_a = exponent_a == 5'b0 && mantissa_a != 10'b0;
-  assign is_subnormal_b = exponent_b == 5'b0 && mantissa_b != 10'b0;
+  //assign is_subnormal_a = exponent_a == 5'b0 && mantissa_a != 10'b0;
+  //assign is_subnormal_b = exponent_b == 5'b0 && mantissa_b != 10'b0;
 
   assign effect_sub = sign_a ^ sign_b;
 
@@ -53,15 +53,19 @@ module new_fp16_add_nolzc #(
 
   always_comb begin
     if (sgn) begin
-      large_exp <= {exponent_a};
-      diff_exp  <= {exponent_a - exponent_b};
-      large_man <= {~is_subnormal_a, mantissa_a};
-      min_man   <= {~is_subnormal_b, mantissa_b};
+      large_exp = {exponent_a};
+      diff_exp  = {exponent_a - exponent_b};
+      //large_man <= {~is_subnormal_a, mantissa_a};
+      large_man = {1'b1, mantissa_a};
+      //min_man   <= {~is_subnormal_b, mantissa_b};
+      min_man   = {1'b1, mantissa_b} >> diff_exp;
     end else begin
-      large_exp <= {exponent_b};
-      diff_exp  <= {exponent_b - exponent_a};
-      large_man <= {~is_subnormal_b, mantissa_b};
-      min_man   <= {~is_subnormal_a, mantissa_a};
+      large_exp = {exponent_b};
+      diff_exp  = {exponent_b - exponent_a};
+      //large_man <= {~is_subnormal_b, mantissa_b};
+      large_man = {1'b1, mantissa_b};
+      //min_man   <= {~is_subnormal_a, mantissa_a};
+      min_man   = {1'b1, mantissa_a} >> diff_exp;
     end
   end
 
@@ -71,8 +75,8 @@ module new_fp16_add_nolzc #(
   logic [ADD_PRECISION-1:0] mantissa;
 
   always_comb begin
-    if (effect_sub) mantissa = large_man - (min_man) >> (diff_exp);
-    else mantissa = (large_man) + ((min_man) >> (diff_exp));
+    if (effect_sub) mantissa = large_man - (min_man);
+    else mantissa = (large_man) + ((min_man));
   end
 
 
@@ -105,10 +109,21 @@ module new_fp16_add_nolzc #(
     if (is_zero) begin
       exponent_c   = 5'b0;
       shift_result = 12'b0;
+    end else begin
+      shift_result = shift_result1;
+      exponent_c   = exponent[4:0];
+    end
+  end
+  /*
+  always_comb begin
+    if (is_zero) begin
+      exponent_c   = 5'b0;
+      shift_result = 12'b0;
     end else if (exponent[5] == 1'b0) begin
       shift_result = shift_result1;
       exponent_c   = exponent[4:0];
-    end else begin
+    end 
+    else begin
       exponent_c   = 5'b0;
       shift_result = shift_result1 >> left_shift;
     end

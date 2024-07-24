@@ -23,9 +23,9 @@
 
 module pipe_stage5 #(
     localparam int unsigned WIDTH = 16,
-    localparam interval_size=8,
-    localparam para=8,
-    localparam parallel_size=2
+    localparam interval_size = 8,
+    localparam para = 8,
+    localparam parallel_size = 2
 ) (
     input logic clk,
     input logic rst,
@@ -62,83 +62,82 @@ module pipe_stage5 #(
   assign mode = 1;  //VPE always 1
 
 
-  genvar i, j;
-  generate
-    for (i = 0; i < parallel_size; i++) begin
-      logic [interval_size-1:0] acc_interval;
+  for (genvar i = 0; i < parallel_size; i++) begin
+    logic [interval_size-1:0] acc_interval;
 
-      interval check_int (
-          .s_i(acc_s[i]),
-          .interval_o(acc_interval)
-      );
+    interval check_int (
+        .s_i(acc_s[i]),
+        .interval_o(acc_interval)
+    );
 
-      assign acc_interval_o[i] = acc_interval;
+    assign acc_interval_o[i] = acc_interval;
 
-      logic [para-1:0] current_cnt;
+    logic [para-1:0] current_cnt;
 
 
 
-      always_comb begin
-        unique case (acc_interval)  //current增加寄存器
-          8'b00000001: current_cnt = interval_cnt_i[i][0] + 1;
-          8'b00000010: current_cnt = interval_cnt_i[i][1] + 1;
-          8'b00000100: current_cnt = interval_cnt_i[i][2] + 1;
-          8'b00001000: current_cnt = interval_cnt_i[i][3] + 1;
-          8'b00010000: current_cnt = interval_cnt_i[i][4] + 1;
-          8'b00100000: current_cnt = interval_cnt_i[i][5] + 1;
-          8'b01000000: current_cnt = interval_cnt_i[i][6] + 1;
-          8'b10000000: current_cnt = interval_cnt_i[i][7] + 1;
-          default: current_cnt = interval_cnt_i[i][0] + 1;
-        endcase
-      end
+    always_comb begin
+      unique case (acc_interval)  //current增加寄存器
+        8'b00000001: current_cnt = interval_cnt_i[i][0] + 1;
+        8'b00000010: current_cnt = interval_cnt_i[i][1] + 1;
+        8'b00000100: current_cnt = interval_cnt_i[i][2] + 1;
+        8'b00001000: current_cnt = interval_cnt_i[i][3] + 1;
+        8'b00010000: current_cnt = interval_cnt_i[i][4] + 1;
+        8'b00100000: current_cnt = interval_cnt_i[i][5] + 1;
+        8'b01000000: current_cnt = interval_cnt_i[i][6] + 1;
+        8'b10000000: current_cnt = interval_cnt_i[i][7] + 1;
+        default: current_cnt = interval_cnt_i[i][0] + 1;
+      endcase
+    end
 
 
 
 
-      logic [WIDTH-1:0] alpha_t;
-      logic [WIDTH-1:0] _alpha_t;
-      logic [WIDTH-1:0] beta_t;
+    logic [WIDTH-1:0] alpha_t;
+    logic [WIDTH-1:0] _alpha_t;
+    logic [WIDTH-1:0] beta_t;
 
 
-      new_fp16_add add1 (
-          .operands_i({a_acc_i[i], {~a_pos_i[i][15], a_pos_i[i][14:0]}}),  // 2 operands
-          .result_o  (alpha_t)
-      );
+    new_fp16_add add1 (
+        .operands_i({a_acc_i[i], {~a_pos_i[i][15], a_pos_i[i][14:0]}}),  // 2 operands
+        .result_o  (alpha_t)
+    );
 
-      new_fp16_add add2 (
-          .operands_i({b_acc_i[i], {~b_pos_i[i][15], b_pos_i[i][14:0]}}),  // 2 operands
-          .result_o  (beta_t)
-      );
+    new_fp16_add add2 (
+        .operands_i({b_acc_i[i], {~b_pos_i[i][15], b_pos_i[i][14:0]}}),  // 2 operands
+        .result_o  (beta_t)
+    );
 
-      new_fp16_mul mul1 (
-          .operands_i({alpha_t, acc_s[i]}),  // 2 operands
-          .result_o  (_alpha_t)
-      );
+    new_fp16_mul mul1 (
+        .operands_i({alpha_t, acc_s[i]}),  // 2 operands
+        .result_o  (_alpha_t)
+    );
 
 
-      assign alpha_o[i] = alpha_t;
-      assign _alpha_o[i] = _alpha_t;
-      assign beta_o[i] = beta_t;
-      assign U_add[i] = current_cnt > max_cnt_i[i];
+    assign alpha_o[i] = alpha_t;
+    assign _alpha_o[i] = _alpha_t;
+    assign beta_o[i] = beta_t;
+    assign U_add[i] = current_cnt > max_cnt_i[i];
 
-      always_comb begin
-        if (U_add[i]) begin
-          mode_o[i] = acc_interval;
-          max_cnt_o[i] = current_cnt;
-        end else begin
-          mode_o[i] = 0;
-          max_cnt_o[i] = 0;
-        end
+    always_comb begin
+      if (U_add[i]) begin
+        mode_o[i] = acc_interval;
+        max_cnt_o[i] = current_cnt;
+      end else begin
+        mode_o[i] = 0;
+        max_cnt_o[i] = 0;
       end
     end
-  endgenerate
+
+  end
 
   for (genvar j = 0; j < interval_size; j++) begin
     always_ff @(posedge clk or posedge rst) begin
       if (rst) interval_cnt_o[j] <= interval_cnt_i;
-      else interval_cnt_o[j] <= interval_cnt_i[j] + acc_interval_o[0][j] + acc_interval_o[i][j];
+      else interval_cnt_o[j] <= interval_cnt_i[j] + acc_interval_o[0][j] + acc_interval_o[1][j];
     end
   end
+
 
   logic [para-1:0] step;
 

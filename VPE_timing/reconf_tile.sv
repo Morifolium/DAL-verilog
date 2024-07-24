@@ -32,8 +32,8 @@ module reconf_tile #(
     input logic [tile_size-1:0][mul_width-1:0] vec2,
     input logic [mul_width-1:0] scal,
     input logic control,  // 1:scal  0:vec
-    output [add_width-1:0] o_scal,
-    output [tile_size-1:0][mul_width-1:0] o_vec
+    output logic [add_width-1:0] o_scal,
+    output logic [tile_size-1:0][mul_width-1:0] o_vec
 
 );
 
@@ -78,7 +78,7 @@ module reconf_tile #(
     assign addsrc2[i] = {muldst[i+1]};
   end
 
-  for (genvar i = 2; i <= (tile_size); i = i * 2) begin //128 64 / 32 16 8/ 4 2 1/
+  for (genvar i = 2; i <= (tile_size); i = i * 2) begin  //128 64 / 32 16 8/ 4 2 1/
     for (genvar j = i - 1; j < tile_size - 1; j += 2 * i) begin
       if (i == 2) begin
         reg [add_width-1:0] add_reg1;
@@ -105,7 +105,10 @@ module reconf_tile #(
     end
   end
 
-  assign o_scal = adddst[63];
+  //assign o_scal = adddst[63];
+  always_ff @(posedge clk) begin
+    o_scal <= adddst[63];
+  end
 
 
   for (genvar i = 0; i < tile_size - 1; i++) begin

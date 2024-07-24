@@ -14,6 +14,7 @@ module pipe_stage6_timing #(
     input logic [tile_size:0][WIDTH-1:0] set_i,
     input logic [parallel_size-1:0][tile_size-1:0][WIDTH-1:0] operandv1_i,
     input logic [parallel_size-1:0][tile_size-1:0][WIDTH-1:0] operandv2_i,
+    input logic [4:0]stage,
 
 
     output logic finished,
@@ -42,7 +43,7 @@ module pipe_stage6_timing #(
       .mode    (mode),
       .scale   (scale),
       .acc_o   (acc_o),
-      .stage   ()
+      .stage   (stage)
   );
 
   VPE_pipe_stage6 u_VPE_pipe_stage6 (

@@ -38,7 +38,7 @@ module pipe_stage2 #(
 
 
     output logic finished,
-    output logic [2:0] stage,
+    input logic [2:0] stage,
     output logic [parallel_size-1:0][WIDTH-1:0] operand1_o,
     output logic [parallel_size-1:0][WIDTH-1:0] operand2_o,
     output logic mode  //reconfigtile mode
@@ -58,16 +58,6 @@ module pipe_stage2 #(
     else step <= step + 1;
   end
 
-  always_comb begin
-    if (step > stage_boundary[6]) stage = 7;
-    else if (step > stage_boundary[5]) stage = 6;
-    else if (step > stage_boundary[4]) stage = 5;
-    else if (step > stage_boundary[3]) stage = 4;
-    else if (step > stage_boundary[2]) stage = 3;
-    else if (step > stage_boundary[1]) stage = 2;
-    else if (step > stage_boundary[0]) stage = 1;
-    else stage = 0;
-  end
 
 
 

@@ -27,12 +27,13 @@ module reconf_tile #(
 
 
 ) (
+    input logic clk,
     input logic [tile_size-1:0][mul_width-1:0] vec1,
     input logic [tile_size-1:0][mul_width-1:0] vec2,
     input logic [mul_width-1:0] scal,
     input logic control,  // 1:scal  0:vec
-    output [add_width-1:0] o_scal,
-    output [tile_size-1:0][mul_width-1:0] o_vec
+    output logic [add_width-1:0] o_scal,
+    output logic [tile_size-1:0][mul_width-1:0] o_vec
 
 );
 
@@ -40,7 +41,7 @@ module reconf_tile #(
   logic [tile_size-1:0][mul_width-1:0] mulsrc2;
   logic [tile_size-1:0][mul_width-1:0] muldst;
 
-  assign mulsrc1 =vec1;
+  assign mulsrc1 = vec1;
   for (genvar i = 0; i < tile_size; i++) begin
     always_comb begin
       if (control == 0) mulsrc2[i] = vec2[i];
@@ -77,14 +78,37 @@ module reconf_tile #(
     assign addsrc2[i] = {muldst[i+1]};
   end
 
-  for (genvar i = 2; i <= (tile_size); i = i * 2) begin
+  for (genvar i = 2; i <= (tile_size); i = i * 2) begin  //128 64 / 32 16 8/ 4 2 1/
     for (genvar j = i - 1; j < tile_size - 1; j += 2 * i) begin
-      assign addsrc1[j] = {adddst[j-i/2]};
-      assign addsrc2[j] = {adddst[j+i/2]};
+      if (i == 2) begin
+        reg [add_width-1:0] add_reg1;
+        reg [add_width-1:0] add_reg2;
+        always_ff @(posedge clk) begin
+          add_reg1 <= adddst[j-i/2];
+          add_reg2 <= adddst[j+i/2];
+        end
+        assign addsrc1[j] = add_reg1;
+        assign addsrc2[j] = add_reg2;
+      end else if (i == 16) begin
+        reg [add_width-1:0] add_reg1;
+        reg [add_width-1:0] add_reg2;
+        always_ff @(posedge clk) begin
+          add_reg1 <= adddst[j-i/2];
+          add_reg2 <= adddst[j+i/2];
+        end
+        assign addsrc1[j] = add_reg1;
+        assign addsrc2[j] = add_reg2;
+      end else begin
+        assign addsrc1[j] = {adddst[j-i/2]};
+        assign addsrc2[j] = {adddst[j+i/2]};
+      end
     end
   end
 
-  assign o_scal = adddst[63];
+  //assign o_scal = adddst[63];
+  always_ff @(posedge clk) begin
+    o_scal <= adddst[63];
+  end
 
 
   for (genvar i = 0; i < tile_size - 1; i++) begin

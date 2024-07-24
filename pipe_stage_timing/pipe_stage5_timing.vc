@@ -6,3 +6,4 @@
 ./interval.sv
 ./lzc.sv
 ./reconf_tile.sv
+./add_lzc.sv

@@ -2,3 +2,4 @@
 ./lzc.sv
 ./new_fp16_add.sv
 ./new_fp16_cmp.sv
+./add_lzc.sv
