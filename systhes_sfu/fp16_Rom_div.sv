@@ -18,10 +18,11 @@
 // Additional Comments:
 // 
 //////////////////////////////////////////////////////////////////////////////////
-`include "registers.svh"
+`include "./addmul_src/registers.svh"
 
 module fp16_Rom_div #(
-    localparam int unsigned WIDTH = 16
+    localparam fpnew_pkg::fp_format_e   FpFormat    = fpnew_pkg::fp_format_e'(2),
+    localparam int unsigned WIDTH = fpnew_pkg::fp_width(FpFormat)
 )
 (
     //input logic mode, //0 div  1 muladd

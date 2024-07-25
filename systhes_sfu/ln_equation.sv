@@ -3,7 +3,7 @@ module ln_equation#(
   parameter int data_width = 16)
   (
     input logic clk,
-    input logic rst_n,
+    input logic rst,
 
     input  logic [data_width-1:0] Garray[dim_size-1: 0],
     output logic [data_width-1:0] equat,
@@ -22,7 +22,7 @@ module ln_equation#(
     .data_cnt   (dim_size/2)
   )inst_acc1 (
     .clk    (clk),
-    .rst_n  (rst_n),
+    .rst  (rst),
     .array  (Garray[dim_size-1:dim_size/2]),
     .result (res_sum1),
     .done   (valid1)
@@ -32,22 +32,38 @@ module ln_equation#(
     .data_cnt   (dim_size/2)
   )inst_acc2 (
     .clk    (clk),
-    .rst_n  (rst_n),
+    .rst  (rst),
     .array  (Garray[dim_size/2-1:0]),
     .result (res_sum2),
     .done   (valid2)
   );
 
   logic sum_done;
+  
   adder_fp16 u_adder_fp16 (
     .clk    (clk),
-    .rst_n  (rst_n & valid1 & valid2),
+    .rst  (rst & valid1 & valid2),
     .mode   (1'b0),
     .op_a   (res_sum1),
     .op_b   (res_sum2),
     .res_o  (res_sum),
     .done   (sum_done)
   );
+
+  // logic rst_adder;
+  // assign rst_adder = rst & valid1 & valid2;
+  // adder_fp16 u_adder_fp16 (
+  //   .clk    (clk),
+  //   .rst    (rst_adder),
+  //   .mode   (1'b0),
+  //   .op_a   (res_sum1),
+  //   .op_b   (res_sum2),
+  //   .res_o  (res_sum),
+  //   .done   (sum_done)
+  // );
+
+
+
 
   // always_comb begin
   //   if (valid1 && valid2) begin
@@ -76,7 +92,7 @@ module ln_equation#(
   logic multi_done;
   multiplier_fp16 inst_multi1(
     .clk    (clk),
-    .rst_n  (rst_n & sum_done),
+    .rst  (rst & sum_done),
     .op_a   (res_sum),
     .op_b   (d_model_r),
     .res_o  (res_div),
@@ -86,7 +102,7 @@ module ln_equation#(
   //作乘法，得到equation^2
   multiplier_fp16 inst_multi2(
     .clk    (clk),
-    .rst_n  (rst_n & multi_done),
+    .rst  (rst & multi_done),
     .op_a   (res_div),
     .op_b   (res_div),
     .res_o  (equat_square),

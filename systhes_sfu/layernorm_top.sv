@@ -3,11 +3,10 @@ module layernorm_pe#(
   parameter int data_width = 16)
   (
     input logic clk,
-    input logic rst_n,
+    input logic rst,
 
     input  logic [data_width-1:0] array[dim_size-1: 0],
     input  logic [data_width-1:0] gmma,
-    input  logic [data_width-1:0] beta,
   
     output logic [data_width-1:0] vari_remul,
     output logic [data_width-1:0] equation,
@@ -19,7 +18,7 @@ module layernorm_pe#(
 
   ln_equation dut_equat(
       .clk    (clk),
-      .rst_n  (rst_n),
+      .rst  (rst),
 
       .Garray (array),
 
@@ -29,7 +28,7 @@ module layernorm_pe#(
   );
   ln_variance dut_vari(
       .clk            (clk),
-      .rst_n          (rst_n),
+      .rst          (rst),
 
       .Garray         (array),
       .equat_square   (equation_squ),

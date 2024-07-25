@@ -12,7 +12,6 @@
 // SPDX-License-Identifier: SHL-0.51
 
 // Author: Stefan Mach <smach@iis.ee.ethz.ch>
-`include "registers.svh"
 
 module fpnew_rounding #(
   parameter int unsigned AbsWidth=2 // Width of the abolute value, without sign bit

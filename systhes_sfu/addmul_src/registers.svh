@@ -13,8 +13,6 @@
 `ifndef COMMON_CELLS_REGISTERS_SVH_
 `define COMMON_CELLS_REGISTERS_SVH_
 
-`include "fpnew_pkg.sv"
-
 // Abridged Summary of available FF macros:
 // `FF:      asynchronous active-low reset (implicit clock and reset)
 // `FFAR:    asynchronous active-high reset
@@ -30,16 +28,17 @@
 // `FFLSRN:  load-enable and synchronous active-low reset
 // `FFLNR:   load-enable without reset
 
+
 // Flip-Flop with asynchronous active-low reset (implicit clock and reset)
 // __q: Q output of FF
 // __d: D input of FF
 // __reset_value: value assigned upon reset
 // Implicit:
-// clk_i: clock input
-// rst_ni: reset input (asynchronous, active low)
+// clk: clock input
+// rst: reset input (asynchronous, active low)
 `define FF(__q, __d, __reset_value)                  \
-  always_ff @(posedge clk_i or negedge rst_ni) begin \
-    if (!rst_ni) begin                               \
+  always_ff @(posedge clk or negedge rst) begin \
+    if (!rst) begin                               \
       __q <= (__reset_value);                        \
     end else begin                                   \
       __q <= (__d);                                  \
@@ -119,11 +118,11 @@
 // __load: load d value into FF
 // __reset_value: value assigned upon reset
 // Implicit:
-// clk_i: clock input
-// rst_ni: reset input (asynchronous, active low)
+// clk: clock input
+// rst: reset input (asynchronous, active low)
 `define FFL(__q, __d, __load, __reset_value)         \
-  always_ff @(posedge clk_i or negedge rst_ni) begin \
-    if (!rst_ni) begin                               \
+  always_ff @(posedge clk or negedge rst) begin \
+    if (!rst) begin                               \
       __q <= (__reset_value);                        \
     end else begin                                   \
       __q <= (__load) ? (__d) : (__q);               \

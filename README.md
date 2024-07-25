@@ -1,1 +1,1 @@
-This is the verilog code for LAD
+This is the verilog code for a LLM Accelerator

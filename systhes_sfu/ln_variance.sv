@@ -3,7 +3,7 @@ module ln_variance#(
   parameter int data_width = 16)
   (
     input logic clk,
-    input logic rst_n,
+    input logic rst,
 
     input  logic [data_width-1:0] Garray[dim_size-1: 0],
     input  logic [data_width-1:0] equat_square,
@@ -21,7 +21,7 @@ module ln_variance#(
         .data_cnt   (dim_size)
     )inst_accmul (
         .clk     (clk),
-        .rst_n   (rst_n),
+        .rst   (rst),
         .array   (Garray),
         .sqarray (Garray_squ),
         .done    (mul_done)
@@ -37,7 +37,7 @@ module ln_variance#(
         .data_cnt   (dim_size/2)
     )inst_acc1 (
         .clk    (clk),
-        .rst_n  (rst_n & mul_done),
+        .rst  (rst & mul_done),
         .array  (Garray_squ[dim_size-1:dim_size/2]),
         .result (res_sum1),
         .done   (sum_valid1)
@@ -47,7 +47,7 @@ module ln_variance#(
         .data_cnt   (dim_size/2)
     )inst_acc2 (
         .clk    (clk),
-        .rst_n  (rst_n & mul_done),
+        .rst  (rst & mul_done),
         .array  (Garray[dim_size/2-1:0]),
         .result (res_sum2),
         .done   (sum_valid2)
@@ -55,7 +55,7 @@ module ln_variance#(
     logic sum_valid;
     adder_fp16 u_adder_fp16 (
         .clk    (clk),
-        .rst_n  (rst_n & sum_valid1 & sum_valid2),
+        .rst  (rst & sum_valid1 & sum_valid2),
         .mode   (1'b0),
         .op_a   (res_sum1),
         .op_b   (res_sum2),
@@ -75,7 +75,7 @@ module ln_variance#(
     );
     multiplier_fp16 inst_multi1(
         .clk    (clk),
-        .rst_n  (rst_n & sum_valid),
+        .rst  (rst & sum_valid),
         .op_a   (res_sum),
         .op_b   (d_model_r),
         .res_o  (res_div),
@@ -87,7 +87,7 @@ module ln_variance#(
     logic vari_done;
     adder_fp16 inst_adder_1(
         .clk    (clk),
-        .rst_n  (rst_n & div_done & equat_valid_i),
+        .rst  (rst & div_done & equat_valid_i),
         .mode   (1'b1),
         .op_a   (equat_square),
         .op_b   (res_div),
@@ -96,12 +96,13 @@ module ln_variance#(
     );
 
     //下面求：var加偏置，开平方，取倒数
-    logic [data_width-1:0] epsonal = 16'h0001; // 10^-8，极小数
+    logic [data_width-1:0] epsonal;
     logic [data_width-1:0] tmp_to_sqrt;
     logic                 vari_re_valid_o;
+    assign epsonal = 16'h0001; // 近似于 10^-8 的极小数
     adder_fp16 inst_adder_2(
         .clk    (clk),
-        .rst_n  (rst_n & vari_done),
+        .rst  (rst & vari_done),
         .mode   (1'b0),
         .op_a   (variance),
         .op_b   (epsonal),
@@ -121,7 +122,7 @@ module ln_variance#(
     );
     multiplier_fp16 inst_multi2(
         .clk    (clk),
-        .rst_n  (rst_n & vari_re_valid_o),
+        .rst  (rst & vari_re_valid_o),
         .op_a   (vari_reverse),
         .op_b   (gmma),
         .res_o  (vari_remul),
