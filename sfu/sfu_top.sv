@@ -1,4 +1,4 @@
-module SpecialFunctionUnit #(
+module sfu_top #(
     parameter int seq_size   = 1024,
     parameter int dim_size   = 128,
     parameter int data_width = 16
@@ -36,6 +36,7 @@ module SpecialFunctionUnit #(
   logic [data_width-1:0] data_i_reo [dim_size-1:0];
   logic [data_width-1:0] sines_reo  [dim_size-1:0];
   logic [data_width-1:0] cosines_reo[dim_size-1:0];
+
   always_comb begin : rope_loop
     integer k;
     for (k = 0; k < dim_size / 2; k++) begin
@@ -85,8 +86,8 @@ module SpecialFunctionUnit #(
 
 
   logic [2:0] vpe_cnt;
-  always_ff @(posedge clk or negedge rst) begin : alu_ctrl
-    if (!rst) begin
+  always_ff @(posedge clk or posedge rst) begin : alu_ctrl
+    if (rst) begin
       op_alu_a <= '{default: '0};
       op_alu_b <= '{default: '0};
       op_alu <= 0;

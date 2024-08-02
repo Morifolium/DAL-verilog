@@ -11,7 +11,7 @@ module ln_equation#(
     output logic                  equat_valid_o
   );
 
-  // ÔªËØµÄÇóºÍ£¬Èý¸ö¼Ó·¨Æ÷
+  // Ôªï¿½Øµï¿½ï¿½ï¿½Í£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó·ï¿½ï¿½ï¿½
   logic [data_width-1:0] res_sum;
   logic [data_width-1:0] res_sum1;
   logic [data_width-1:0] res_sum2;
@@ -27,6 +27,7 @@ module ln_equation#(
     .result (res_sum1),
     .done   (valid1)
   );
+
   Accumulator #(
     .data_width (data_width),
     .data_cnt   (dim_size/2)
@@ -38,16 +39,10 @@ module ln_equation#(
     .done   (valid2)
   );
 
-  logic sum_done;
   
-  adder_fp16 u_adder_fp16 (
-    .clk    (clk),
-    .rst  (rst & valid1 & valid2),
-    .mode   (1'b0),
-    .op_a   (res_sum1),
-    .op_b   (res_sum2),
-    .res_o  (res_sum),
-    .done   (sum_done)
+  new_fp16_add u_adder_fp16 (
+    .operands_i({res_sum1,res_sum2}),
+    .result_o  (res_sum)
   );
 
   // logic rst_adder;
@@ -79,34 +74,27 @@ module ln_equation#(
   logic [data_width-1:0] res_div;
   assign equat = res_div;
 
-  //³ýdim_size£¬µÃµ½equation
+  //ï¿½ï¿½dim_sizeï¿½ï¿½ï¿½Ãµï¿½equation
   logic [data_width-1:0] d_model;
   logic [data_width-1:0] d_model_r;
-  assign d_model = 16'h5800; //dim_size = 128 µÄfp16±íÊ¾
+  assign d_model = 16'h5800; //dim_size = 128 ï¿½ï¿½fp16ï¿½ï¿½Ê¾
 
   fp16_Rom_div inst_reverse (
     .operands (d_model),
     .result   (d_model_r)
   );
 
-  logic multi_done;
-  multiplier_fp16 inst_multi1(
-    .clk    (clk),
-    .rst  (rst & sum_done),
-    .op_a   (res_sum),
-    .op_b   (d_model_r),
-    .res_o  (res_div),
-    .done   (multi_done)
+  new_fp16_mul inst_multi1(
+    .operands_i({res_sum,d_model_r}),
+    .result_o  (res_div)
   );
 
-  //×÷³Ë·¨£¬µÃµ½equation^2
-  multiplier_fp16 inst_multi2(
-    .clk    (clk),
-    .rst  (rst & multi_done),
-    .op_a   (res_div),
-    .op_b   (res_div),
-    .res_o  (equat_square),
-    .done   (equat_valid_o)
+  //ï¿½ï¿½ï¿½Ë·ï¿½ï¿½ï¿½ï¿½Ãµï¿½equation^2
+  new_fp16_mul inst_multi2(
+    .operands_i({res_div,res_div}),
+    .result_o  (equat_square)
   );
+
+  assign equat_valid_o=valid1&valid2;
 
 endmodule

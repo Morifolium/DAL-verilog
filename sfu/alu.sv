@@ -14,18 +14,12 @@ module alu #(
     // op = 0, add
     // op = 1, sub
 
-  logic valid[dim_size-1:0];
   genvar i;
   generate
     for(i = 0; i < dim_size; i++) begin
-        adder_fp16 inst_adder (
-            .clk    (clk),
-            .rst  (rst),
-            .mode   (op),
-            .op_a   (a_vec[i]),
-            .op_b   (b_vec[i]),
-            .done   (valid[i]),
-            .res_o  (res_o[i])
+        new_fp16_add inst_adder(
+            .operands_i({a_vec[i],b_vec[i]}),
+            .result_o(res_o[i])
         );
     end
   endgenerate 
