@@ -1,1 +1,1 @@
-This is the verilog code for a LLM Accelerator
+This is the verilog code for an Accelerator
